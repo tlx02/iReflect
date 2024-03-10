@@ -1,6 +1,7 @@
 export const APP_NAME = "iReflect";
 export const EMAIL = "email";
 export const PASSWORD = "password";
+export const RE_PASSWORD = "re_password";
 export const ID = "id";
 export const CREATED_AT = "createdAt";
 export const UPDATED_AT = "updatedAt";

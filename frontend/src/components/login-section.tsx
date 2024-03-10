@@ -3,6 +3,11 @@ import { APP_NAME, SUPPORT_EMAIL } from "../constants";
 import LoginProvider from "../contexts/login-provider";
 import { colorModeValue } from "../utils/theme-utils";
 import LoginCard from "./login-card";
+import PasswordResetCard from "./password-reset-card";
+
+interface LoginSectionProps {
+  isPasswordReset?: boolean;
+}
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -19,7 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function LoginSection() {
+function LoginSection({ isPasswordReset }: LoginSectionProps) {
   const { classes } = useStyles();
 
   return (
@@ -48,7 +53,7 @@ function LoginSection() {
       </Stack>
 
       <LoginProvider>
-        <LoginCard />
+        {isPasswordReset ? <PasswordResetCard /> : <LoginCard />}
       </LoginProvider>
     </Stack>
   );

@@ -13,3 +13,4 @@ django-json-widget
 colorlog
 requests
 selenium
+sendgrid

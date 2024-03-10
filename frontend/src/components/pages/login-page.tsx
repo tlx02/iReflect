@@ -8,6 +8,10 @@ import resetAppState from "../../redux/thunks/reset-app-state";
 import { colorModeValue } from "../../utils/theme-utils";
 import { useAppDispatch } from "../../redux/hooks";
 
+interface LoginPageProps {
+  isPasswordReset?: boolean;
+}
+
 const useStyles = createStyles((theme) => ({
   main: {
     minHeight: "100vh",
@@ -23,7 +27,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function LoginPage() {
+function LoginPage({ isPasswordReset }: LoginPageProps) {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
 
@@ -43,7 +47,7 @@ function LoginPage() {
         </Group>
 
         <Container className={classes.container} size={450} p={32}>
-          <LoginSection />
+          <LoginSection isPasswordReset={isPasswordReset} />
         </Container>
       </Box>
     </>

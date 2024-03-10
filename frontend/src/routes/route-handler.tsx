@@ -158,7 +158,13 @@ function RouteHandler() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       ) : (
-        <Route path="*" element={<LoginPage />} />
+        <>
+          <Route
+            path="/password-reset/:uid/:token"
+            element={<LoginPage isPasswordReset />}
+          />
+          <Route path="*" element={<LoginPage />} />
+        </>
       )}
     </Routes>
   );

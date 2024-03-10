@@ -45,3 +45,20 @@ def reset_password(user: User) -> Optional[str]:
     )
 
     return random_password if password_authentication is not None else None
+
+
+@transaction.atomic
+def reset_password(user: User, new_password) -> Optional[str]:
+
+    PasswordAuthentication.objects.filter(user=user).delete()
+
+    ## try to create new password auth method for user
+    password_authentication = PasswordAuthentication.create(
+        user=user,
+        auth_data=PasswordAuthenticationData(
+            name="", email="", auth_id=new_password
+        ),
+        check_alt_methods=False,
+    )
+
+    return new_password if password_authentication is not None else None

@@ -65,9 +65,12 @@ function PasswordResetForm() {
       ...passwordResetFormData,
     };
 
-    await passwordResetConfirm(passwordResetConfirmPostData);
-
-    setResetConfirmed(true);
+    try {
+      await passwordResetConfirm(passwordResetConfirmPostData).unwrap();
+      setResetConfirmed(true);
+    } catch (error) {
+      resolveError(error);
+    }
   };
 
   return resetConfirmed ? (

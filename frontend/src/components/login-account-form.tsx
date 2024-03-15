@@ -92,11 +92,15 @@ function LoginAccountForm() {
   };
 
   const resetPassword = async () => {
-    await passwordReset({ email });
-    toastUtils.success({
-      message:
-        "Password reset email sent. Check your email for the reset link.",
-    });
+    try {
+      await passwordReset({ email }).unwrap();
+      toastUtils.success({
+        message:
+          "Password reset email sent. Check your email for the reset link.",
+      });
+    } catch (error) {
+      resolveError(error);
+    }
   };
 
   return (

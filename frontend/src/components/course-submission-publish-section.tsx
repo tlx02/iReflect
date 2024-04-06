@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
+import { Group, Paper, Text } from "@mantine/core";
 import PlaceholderWrapper from "./placeholder-wrapper";
 import { useResolveError } from "../utils/error-utils";
 import { useGetSubmissionViewableGroupsQuery } from "../redux/services/submissions-api";
-import { Group, Paper, Text } from "@mantine/core";
 import CourseSubmissionPublishPopover from "./course-submission-publish-popover";
 
 type CourseSubmissionPublishSectionProps = {
@@ -24,7 +24,7 @@ const CourseSubmissionPublishSection = ({
         selectFromResult: ({
           data: viewableGroups,
           isLoading: isLoadingViewableGroups,
-          error: error,
+          error,
         }) => ({
           viewableGroups,
           isLoadingViewableGroups,

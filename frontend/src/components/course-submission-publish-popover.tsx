@@ -21,9 +21,7 @@ const CourseSubmissionPublishPopover = ({
 }: CourseSubmissionPublishPopoverProps) => {
   const [opened, setOpened] = useState(false);
   const { groups, isLoadingGroups, error } = useGetCourseGroupsQuery(
-    courseId === undefined
-      ? skipToken
-      : { courseId, me: false },
+    courseId === undefined ? skipToken : { courseId, me: false },
     {
       selectFromResult: ({
         data: groups,

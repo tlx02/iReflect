@@ -128,7 +128,6 @@ export type FormResponseField =
   | MrqFormResponseField
   | TextDisplayFormField;
 
-
 export type SubmissionViewData = Partial<BaseData> & {
   [NAME]: string;
   [DESCRIPTION]: string;

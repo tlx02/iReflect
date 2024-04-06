@@ -4,9 +4,7 @@ import {
   createStyles,
   Group,
   LoadingOverlay,
-  MultiSelect,
   Paper,
-  Popover,
   Stack,
   Text,
 } from "@mantine/core";
@@ -35,6 +33,9 @@ import { DATE_TIME_MONTH_NAME_FORMAT, UNKNOWN_USER } from "../../constants";
 import { displayDateTime } from "../../utils/transform-utils";
 import useGetCourseMilestoneSubmissionPermissions from "../../custom-hooks/use-get-course-milestone-submission-permissions";
 import PublishSubmissionsPopover from "../publish-submissions-popover";
+import useGetCoursePermissions from "../../custom-hooks/use-get-course-permissions";
+import ConditionalRenderer from "../conditional-renderer";
+import { SubmissionType } from "../../types/templates";
 
 const useStyles = createStyles({
   formContainer: {
@@ -168,6 +169,7 @@ function CourseMilestoneSubmissionsViewPage() {
       onConfirm: onDeleteSubmission,
     });
 
+  const { canAccessFullDetails } = useGetCoursePermissions();
   const { viewableGroups, isLoadingViewableGroups, viewableGroupsError } =
     useGetSubmissionViewableGroupsQuery(
       courseId === undefined || submissionId === undefined
@@ -260,21 +262,29 @@ function CourseMilestoneSubmissionsViewPage() {
         </Group>
       </Group>
 
-      <Group spacing={12}>
-        <Text size="sm">Currently published to:</Text>
-        <Paper withBorder p={6}>
-          <Text size="sm">
-            {viewableGroups &&
-              viewableGroups.map((group) => group.name).join(", ")}
-          </Text>
-        </Paper>
-        <PublishSubmissionsPopover
-          courseId={courseId}
-          submissionId={submissionId}
-          submissionType={submission.submissionType}
-          viewableGroups={viewableGroups ?? []}
-        />
-      </Group>
+      <ConditionalRenderer
+        allow={
+          canAccessFullDetails &&
+          submission.submissionType === SubmissionType.Group
+        }
+      >
+        <Group spacing={12}>
+          <Text size="sm">Currently published to:</Text>
+          <Paper withBorder p={6}>
+            <Text size="sm">
+              {viewableGroups &&
+                viewableGroups.map((group) => group.name).join(", ")}
+            </Text>
+          </Paper>
+          <PublishSubmissionsPopover
+            courseId={courseId}
+            submissionId={submissionId}
+            submissionType={submission.submissionType}
+            viewableGroups={viewableGroups ?? []}
+          />
+        </Group>
+      </ConditionalRenderer>
+
       <Group>
         <Button
           color="red"

@@ -7,6 +7,7 @@ import { useUpdateSubmissionViewableGroupsMutation } from "../redux/services/sub
 import { GroupData } from "../types/groups";
 import toastUtils from "../utils/toast-utils";
 import PlaceholderWrapper from "./placeholder-wrapper";
+import { useResolveError } from "../utils/error-utils";
 
 type PublishSubmissionsPopoverProps = {
   courseId?: number | string;
@@ -21,23 +22,25 @@ const PublishSubmissionsPopover = ({
   submissionType,
   viewableGroups,
 }: PublishSubmissionsPopoverProps) => {
-  const { groups, isLoadingGroups, courseGroupsError } =
-    useGetCourseGroupsQuery(
-      courseId === undefined || submissionType !== SubmissionType.Group
-        ? skipToken
-        : { courseId, me: false },
-      {
-        selectFromResult: ({
-          data: groups,
-          isLoading: isLoadingGroups,
-          error: courseGroupsError,
-        }) => ({
-          groups,
-          isLoadingGroups,
-          courseGroupsError,
-        }),
-      },
-    );
+  const [opened, setOpened] = useState(false);
+  const { groups, isLoadingGroups, error } = useGetCourseGroupsQuery(
+    courseId === undefined || submissionType !== SubmissionType.Group
+      ? skipToken
+      : { courseId, me: false },
+    {
+      selectFromResult: ({
+        data: groups,
+        isLoading: isLoadingGroups,
+        error,
+      }) => ({
+        groups,
+        isLoadingGroups,
+        error,
+      }),
+    },
+  );
+
+  useResolveError({ error, name: "publish-submissions-popover" });
 
   const groupOptions: string[] = useMemo(
     () => groups?.map(({ name }) => name) ?? [],
@@ -61,6 +64,10 @@ const PublishSubmissionsPopover = ({
       }),
     });
 
+  const { resolveError } = useResolveError({
+    name: "publish-submissions-popover",
+  });
+
   const onUpdatePublishingStatus = async () => {
     if (
       isUpdatingPublishingStatus ||
@@ -81,14 +88,20 @@ const PublishSubmissionsPopover = ({
       groupIds: viewableGroupsIds,
     };
 
-    await updatePublishingStatus({
-      ...submissionViewableGroupsPutData,
-    }).unwrap();
+    try {
+      await updatePublishingStatus({
+        ...submissionViewableGroupsPutData,
+      }).unwrap();
 
-    toastUtils.success({
-      message:
-        "This submission's publishing status has been updated successfully.",
-    });
+      toastUtils.success({
+        message:
+          "This submission's publishing status has been updated successfully.",
+      });
+
+      setOpened(false);
+    } catch (error) {
+      resolveError(error);
+    }
   };
 
   if (isLoadingGroups) {
@@ -102,9 +115,18 @@ const PublishSubmissionsPopover = ({
   }
 
   return (
-    <Popover width={300} position="bottom-start" withArrow shadow="md">
+    <Popover
+      width={300}
+      position="bottom-start"
+      withArrow
+      shadow="md"
+      opened={opened}
+      onChange={setOpened}
+    >
       <Popover.Target>
-        <Button color="blue">Change Publishing Status</Button>
+        <Button color="blue" onClick={() => setOpened((o) => !o)}>
+          Change Publishing Status
+        </Button>
       </Popover.Target>
       <Popover.Dropdown>
         <Stack spacing={12}>

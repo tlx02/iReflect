@@ -1,10 +1,11 @@
 import { Stack, Title, Text, SimpleGrid, Anchor } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { DATE_TIME_MONTH_NAME_FORMAT, UNKNOWN_USER } from "../constants";
-import { SubmissionSummaryData, VisibilityStatus } from "../types/submissions";
+import { SubmissionSummaryData } from "../types/submissions";
 import { displayDateTime } from "../utils/transform-utils";
 import SubmissionTypeIconLabel from "./submission-type-icon-label";
 import TextViewer from "./text-viewer";
+import { VisibilityStatus } from "../types/enums";
 
 type Props = SubmissionSummaryData;
 

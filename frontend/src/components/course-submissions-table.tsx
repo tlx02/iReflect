@@ -2,10 +2,11 @@ import { Anchor, Badge, createStyles, Group, Table } from "@mantine/core";
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { DATE_TIME_MONTH_NAME_FORMAT, UPDATED_AT } from "../constants";
-import { SubmissionSummaryData, VisibilityStatus } from "../types/submissions";
+import { SubmissionSummaryData } from "../types/submissions";
 import { colorModeValue } from "../utils/theme-utils";
 import { sort, displayDateTime } from "../utils/transform-utils";
 import SubmissionTypeIconLabel from "./submission-type-icon-label";
+import { VisibilityStatus } from "../types/enums";
 
 const useStyles = createStyles((theme) => ({
   row: {

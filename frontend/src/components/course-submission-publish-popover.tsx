@@ -1,30 +1,27 @@
 import React, { useMemo, useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-import { Popover, Button, Stack, MultiSelect, SelectItem } from "@mantine/core";
+import { Popover, Button, Stack, MultiSelect } from "@mantine/core";
 import { useGetCourseGroupsQuery } from "../redux/services/groups-api";
-import { SubmissionType } from "../types/templates";
 import { useUpdateSubmissionViewableGroupsMutation } from "../redux/services/submissions-api";
 import { GroupData } from "../types/groups";
 import toastUtils from "../utils/toast-utils";
 import PlaceholderWrapper from "./placeholder-wrapper";
 import { useResolveError } from "../utils/error-utils";
 
-type PublishSubmissionsPopoverProps = {
+type CourseSubmissionPublishPopoverProps = {
   courseId?: number | string;
   submissionId?: number | string;
-  submissionType?: SubmissionType;
   viewableGroups?: GroupData[];
 };
 
-const PublishSubmissionsPopover = ({
+const CourseSubmissionPublishPopover = ({
   courseId,
   submissionId,
-  submissionType,
   viewableGroups,
-}: PublishSubmissionsPopoverProps) => {
+}: CourseSubmissionPublishPopoverProps) => {
   const [opened, setOpened] = useState(false);
   const { groups, isLoadingGroups, error } = useGetCourseGroupsQuery(
-    courseId === undefined || submissionType !== SubmissionType.Group
+    courseId === undefined
       ? skipToken
       : { courseId, me: false },
     {
@@ -40,7 +37,7 @@ const PublishSubmissionsPopover = ({
     },
   );
 
-  useResolveError({ error, name: "publish-submissions-popover" });
+  useResolveError({ error, name: "course-submission-publish-popover" });
 
   const groupOptions: string[] = useMemo(
     () => groups?.map(({ name }) => name) ?? [],
@@ -65,7 +62,7 @@ const PublishSubmissionsPopover = ({
     });
 
   const { resolveError } = useResolveError({
-    name: "publish-submissions-popover",
+    name: "course-submission-publish-popover",
   });
 
   const onUpdatePublishingStatus = async () => {
@@ -151,4 +148,4 @@ const PublishSubmissionsPopover = ({
   );
 };
 
-export default PublishSubmissionsPopover;
+export default CourseSubmissionPublishPopover;

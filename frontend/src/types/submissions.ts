@@ -37,6 +37,7 @@ import {
   TemplateData,
 } from "./templates";
 import { UserData } from "./users";
+import { VisibilityStatus } from "./enums";
 
 export const textFormResponseFieldSchema = textFormFieldSchema.extend({
   [RESPONSE]: z.string().trim(),
@@ -127,10 +128,6 @@ export type FormResponseField =
   | MrqFormResponseField
   | TextDisplayFormField;
 
-export enum VisibilityStatus {
-  Published = "PUBLISHED",
-  Private = "PRIVATE",
-}
 
 export type SubmissionViewData = Partial<BaseData> & {
   [NAME]: string;

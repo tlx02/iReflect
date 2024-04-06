@@ -21,7 +21,6 @@ import { useGetSingleMilestoneQueryState } from "../../redux/services/milestones
 import {
   useDeleteSubmissionMutation,
   useGetSingleSubmissionQuery,
-  useGetSubmissionViewableGroupsQuery,
   useUpdateSubmissionMutation,
 } from "../../redux/services/submissions-api";
 import { SubmissionPutData } from "../../types/submissions";
@@ -32,10 +31,10 @@ import PlaceholderWrapper from "../placeholder-wrapper";
 import { DATE_TIME_MONTH_NAME_FORMAT, UNKNOWN_USER } from "../../constants";
 import { displayDateTime } from "../../utils/transform-utils";
 import useGetCourseMilestoneSubmissionPermissions from "../../custom-hooks/use-get-course-milestone-submission-permissions";
-import PublishSubmissionsPopover from "../publish-submissions-popover";
 import useGetCoursePermissions from "../../custom-hooks/use-get-course-permissions";
 import ConditionalRenderer from "../conditional-renderer";
 import { SubmissionType } from "../../types/templates";
+import CourseSubmissionPublishSection from "../course-submission-publish-section";
 
 const useStyles = createStyles({
   formContainer: {
@@ -92,6 +91,7 @@ function CourseMilestoneSubmissionsViewPage() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const modals = useModals();
+  const { canAccessFullDetails } = useGetCoursePermissions();
   const { canModify, canDelete } = useGetCourseMilestoneSubmissionPermissions();
 
   const onUpdateSubmission = async (formData: SubmissionFormData) => {
@@ -169,25 +169,6 @@ function CourseMilestoneSubmissionsViewPage() {
       onConfirm: onDeleteSubmission,
     });
 
-  const { canAccessFullDetails } = useGetCoursePermissions();
-  const { viewableGroups, isLoadingViewableGroups, viewableGroupsError } =
-    useGetSubmissionViewableGroupsQuery(
-      courseId === undefined || submissionId === undefined
-        ? skipToken
-        : { courseId, submissionId },
-      {
-        selectFromResult: ({
-          data: viewableGroups,
-          isLoading: isLoadingViewableGroups,
-          error: viewableGroupsError,
-        }) => ({
-          viewableGroups,
-          isLoadingViewableGroups,
-          viewableGroupsError,
-        }),
-      },
-    );
-
   useEffect(() => {
     if (submission) {
       formRef.current?.reset(submission);
@@ -202,16 +183,6 @@ function CourseMilestoneSubmissionsViewPage() {
         loadingMessage="Loading submission..."
         showDefaultMessage={!submission}
         defaultMessage="No submission found."
-      />
-    );
-  }
-
-  if (isLoadingViewableGroups) {
-    return (
-      <PlaceholderWrapper
-        py={150}
-        isLoading={isLoadingViewableGroups}
-        loadingMessage="Loading publishing status..."
       />
     );
   }
@@ -268,21 +239,10 @@ function CourseMilestoneSubmissionsViewPage() {
           submission.submissionType === SubmissionType.Group
         }
       >
-        <Group spacing={12}>
-          <Text size="sm">Currently published to:</Text>
-          <Paper withBorder p={6}>
-            <Text size="sm">
-              {viewableGroups &&
-                viewableGroups.map((group) => group.name).join(", ")}
-            </Text>
-          </Paper>
-          <PublishSubmissionsPopover
-            courseId={courseId}
-            submissionId={submissionId}
-            submissionType={submission.submissionType}
-            viewableGroups={viewableGroups ?? []}
-          />
-        </Group>
+        <CourseSubmissionPublishSection
+          courseId={courseId}
+          submissionId={submissionId}
+        />
       </ConditionalRenderer>
 
       <Group>

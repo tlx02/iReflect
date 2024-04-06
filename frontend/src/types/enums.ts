@@ -6,3 +6,8 @@ export enum FormFieldType {
   Mrq = "MRQ",
   TextDisplay = "TEXT_DISPLAY",
 }
+
+export enum VisibilityStatus {
+  Published = "PUBLISHED",
+  Private = "PRIVATE",
+}

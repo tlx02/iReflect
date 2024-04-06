@@ -9,12 +9,12 @@ import {
   EX_COURSE_MEMBER,
   UNKNOWN_USER,
 } from "../constants";
-import type {
-  SubmissionSummaryData,
-  SubmissionDataWithComments,
-  SubmissionViewData,
+import {
+  type SubmissionSummaryData,
+  type SubmissionDataWithComments,
+  type SubmissionViewData,
 } from "../types/submissions";
-import { FormFieldType } from "../types/enums";
+import { FormFieldType, VisibilityStatus } from "../types/enums";
 import type { TemplateData } from "../types/templates";
 import type { SubmissionCommentData } from "../types/comments";
 import { roleToPropertiesMap } from "../types/courses";
@@ -333,6 +333,7 @@ export function transformTemplateToSubmissionView({
           return { ...formField, response: "" };
       }
     }),
+    visibility: VisibilityStatus.Private,
     ...overrides,
   };
 

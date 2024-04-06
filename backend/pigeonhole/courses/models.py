@@ -268,6 +268,11 @@ def course_submission_comment_cleanup(
     instance.comment.delete()
 
 
+class VisibilityStatus(models.TextChoices):
+    PRIVATE = "PRIVATE"
+    PUBLISHED = "PUBLISHED"
+
+
 ## set up listener to delete comment when a course submission comment is deleted
 post_delete.connect(
     course_submission_comment_cleanup,

@@ -18,6 +18,7 @@ import {
   TEMPLATE,
   TEMPLATE_ID,
   TYPE,
+  VISIBILITY,
 } from "../constants";
 import { BaseData } from "./base";
 import { SubmissionCommentData } from "./comments";
@@ -126,6 +127,11 @@ export type FormResponseField =
   | MrqFormResponseField
   | TextDisplayFormField;
 
+export enum VisibilityStatus {
+  Published = "PUBLISHED",
+  Private = "PRIVATE",
+}
+
 export type SubmissionViewData = Partial<BaseData> & {
   [NAME]: string;
   [DESCRIPTION]: string;
@@ -137,6 +143,7 @@ export type SubmissionViewData = Partial<BaseData> & {
   [GROUP]: Pick<GroupData, typeof ID | typeof NAME> | null;
   [TEMPLATE]: TemplateData | null;
   [FORM_RESPONSE_DATA]: FormResponseField[];
+  [VISIBILITY]: VisibilityStatus;
 };
 
 export type SubmissionPutData = Pick<
@@ -166,6 +173,7 @@ export type SubmissionSummaryData = BaseData &
     | typeof EDITOR
     | typeof MILESTONE
     | typeof GROUP
+    | typeof VISIBILITY
   >;
 
 export type SubmissionData = SubmissionSummaryData &
@@ -175,6 +183,6 @@ export type SubmissionDataWithComments = SubmissionData & {
   [COMMENTS]: SubmissionCommentData[];
 };
 
-export type SubmissionViewableGroupsData = {
+export type SubmissionViewableGroupsPutData = {
   [GROUP_IDS]: number[];
 };

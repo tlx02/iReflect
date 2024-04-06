@@ -45,7 +45,6 @@ from .logic import (
     course_submission_comment_to_json,
     course_submission_summary_to_json,
     course_submission_to_json,
-    course_submission_with_viewable_groups_to_json,
     course_summary_to_json,
     course_to_json,
     course_milestone_to_json,
@@ -1208,12 +1207,15 @@ class CourseSubmissionViewableGroupsView(APIView):
         validated_data = serializer.validated_data
 
         try:
-            updated_submission = batch_update_course_submission_viewable_groups(
+            updated_viewable_groups = batch_update_course_submission_viewable_groups(
                 course=course, submission=submission, group_ids=validated_data["group_ids"]
             )
         except ValueError as e:
             raise BadRequest(detail=e)
 
-        data = course_submission_with_viewable_groups_to_json(updated_submission)
+        data = [
+            course_group_to_json(viewable_group.group) 
+            for viewable_group in updated_viewable_groups
+        ]
 
         return Response(data=data, status=status.HTTP_200_OK)

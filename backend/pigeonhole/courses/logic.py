@@ -41,7 +41,7 @@ from pigeonhole.common.constants import (
     FIELD_INDEX,
     CONTENT,
     IS_DELETED,
-    VIEWABLE_GROUPS,
+    VISIBILITY,
 )
 from pigeonhole.common.parsers import to_base_json, parse_datetime_to_ms_timestamp
 from forms.models import Form
@@ -63,6 +63,7 @@ from .models import (
     PatchCourseGroupAction,
     Role,
     SubmissionType,
+    VisibilityStatus,
 )
 
 logger = logging.getLogger("main")
@@ -228,6 +229,9 @@ def course_submission_summary_to_json(submission: CourseSubmission) -> dict:
         GROUP: {ID: submission.group.id, NAME: submission.group.name}
         if submission.group is not None
         else None,
+        VISIBILITY: VisibilityStatus.PUBLISHED 
+        if submission.coursesubmissionviewablegroup_set.count() > 0
+        else VisibilityStatus.PRIVATE,
     }
 
     return data
@@ -274,6 +278,9 @@ def course_submission_to_json(
         if submission.template is not None
         else None,
         FORM_RESPONSE_DATA: submission.form_response_data,
+        VISIBILITY: VisibilityStatus.PUBLISHED 
+        if submission.coursesubmissionviewablegroup_set.count() > 0
+        else VisibilityStatus.PRIVATE,
     }
 
     if with_comments:
@@ -968,25 +975,7 @@ def batch_update_course_submission_viewable_groups(
             logger.warning(e)
             raise ValueError("Unable to publish the submission to a group.")
 
-    updated_submission = CourseSubmission.objects.prefetch_related(
-        Prefetch(
-            lookup="coursesubmissionviewablegroup_set",
-            queryset=CourseSubmissionViewableGroup.objects.select_related(
-                "group"
-            ),
-        )
-    ).get(id=submission.id)
+    updated_viewable_groups = submission.coursesubmissionviewablegroup_set \
+        .prefetch_related('group').all()
 
-    return updated_submission
-
-def course_submission_with_viewable_groups_to_json(submission: CourseSubmission) -> dict:
-    data = course_submission_to_json(submission=submission)
-
-    data |= {
-        VIEWABLE_GROUPS: [
-            course_group_to_json(viewable_group.group)
-            for viewable_group in submission.coursesubmissionviewablegroup_set.all()
-        ],
-    }
-
-    return data
+    return updated_viewable_groups

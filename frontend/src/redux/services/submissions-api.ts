@@ -5,7 +5,7 @@ import {
   SubmissionPostData,
   SubmissionPutData,
   SubmissionSummaryData,
-  SubmissionViewableGroupsData,
+  SubmissionViewableGroupsPutData,
 } from "../../types/submissions";
 import { sanitizeObject } from "../../utils/transform-utils";
 import { cacher } from "./api-cache-utils";
@@ -144,8 +144,8 @@ const submissionsApi = baseApi
       }),
 
       updateSubmissionViewableGroups: build.mutation<
-        SubmissionData & SubmissionViewableGroupsData,
-        SubmissionViewableGroupsData & {
+        GroupData[],
+        SubmissionViewableGroupsPutData & {
           courseId: string | number;
           submissionId: string | number;
         }

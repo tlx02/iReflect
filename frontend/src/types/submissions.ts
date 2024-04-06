@@ -7,6 +7,7 @@ import {
   FORM_RESPONSE_DATA,
   GROUP,
   GROUP_ID,
+  GROUP_IDS,
   ID,
   IS_DRAFT,
   MILESTONE,
@@ -172,4 +173,8 @@ export type SubmissionData = SubmissionSummaryData &
 
 export type SubmissionDataWithComments = SubmissionData & {
   [COMMENTS]: SubmissionCommentData[];
+};
+
+export type SubmissionViewableGroupsData = {
+  [GROUP_IDS]: number[];
 };

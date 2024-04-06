@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    CourseSubmissionViewableGroupsView,
     MyCoursesView,
     SingleCourseView,
     CourseMilestonesView,
@@ -91,5 +92,10 @@ urlpatterns = [
         "<int:course_id>/submissions/<int:submission_id>/comments/<int:comment_id>",
         SingleCourseSubmissionCommentView.as_view(),
         name="single_course_submission_comment",
+    ),
+    path(
+        "<int:course_id>/submissions/<int:submission_id>/viewable-groups",
+        CourseSubmissionViewableGroupsView.as_view(),
+        name="course_submission_viewable_groups",
     ),
 ]

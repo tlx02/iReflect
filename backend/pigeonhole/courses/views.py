@@ -27,6 +27,7 @@ from .models import (
 )
 from .logic import (
     batch_update_course_group_members,
+    batch_update_course_submission_viewable_groups,
     can_create_course_group,
     can_delete_course_group,
     can_delete_course_submission,
@@ -44,6 +45,7 @@ from .logic import (
     course_submission_comment_to_json,
     course_submission_summary_to_json,
     course_submission_to_json,
+    course_submission_with_viewable_groups_to_json,
     course_summary_to_json,
     course_to_json,
     course_milestone_to_json,
@@ -86,6 +88,7 @@ from .serializers import (
     PatchCourseMembershipSerializer,
     PutCourseSubmissionCommentSerializer,
     PutCourseSubmissionSerializer,
+    PutCourseSubmissionViewableGroupsSerializer,
 )
 from .middlewares import (
     check_course,
@@ -1164,5 +1167,53 @@ class CourseMembershipsWithNewUserCreationView(APIView):
         # return all members
         memberships = CourseMembership.objects.filter(user__email__in=emails)
         data = [course_membership_to_json(membership) for membership in memberships]
+
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class CourseSubmissionViewableGroupsView(APIView):
+    @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
+    @check_course
+    @check_requester_membership(Role.INSTRUCTOR, Role.CO_OWNER)
+    @check_submission
+    def get(
+        self,
+        request,
+        requester: User,
+        course: Course,
+        requester_membership: CourseMembership,
+        submission: CourseSubmission,
+    ):
+        viewable_groups: QuerySet[CourseGroup] = submission.coursesubmissionviewablegroup_set.prefetch_related('group')
+
+        data = [course_group_to_json(viewable_group.group) for viewable_group in viewable_groups]
+
+        return Response(data=data, status=status.HTTP_200_OK)
+    
+    @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
+    @check_course
+    @check_requester_membership(Role.INSTRUCTOR, Role.CO_OWNER)
+    @check_submission
+    def put(
+        self,
+        request,
+        requester: User,
+        course: Course,
+        requester_membership: CourseMembership,
+        submission: CourseSubmission,
+    ):
+        serializer = PutCourseSubmissionViewableGroupsSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        try:
+            updated_submission = batch_update_course_submission_viewable_groups(
+                course=course, submission=submission, group_ids=validated_data["group_ids"]
+            )
+        except ValueError as e:
+            raise BadRequest(detail=e)
+
+        data = course_submission_with_viewable_groups_to_json(updated_submission)
 
         return Response(data=data, status=status.HTTP_200_OK)

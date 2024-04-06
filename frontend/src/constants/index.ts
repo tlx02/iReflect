@@ -68,6 +68,7 @@ export const FORM_RESPONSE_DATA = "formResponseData";
 export const TEMPLATE_ID = "templateId";
 export const MILESTONE_ID = "milestoneId";
 export const GROUP_ID = "groupId";
+export const GROUP_IDS = "groupIds";
 export const RESPONSE = "response";
 export const CREATOR = "creator";
 export const EDITOR = "editor";

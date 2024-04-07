@@ -1,6 +1,7 @@
-import { Button, TypographyStylesProvider, Text, Stack } from "@mantine/core";
+import { Button, Text, Stack, Paper, Blockquote } from "@mantine/core";
 import { useFormContext } from "react-hook-form";
 import { FaRegSmile } from "react-icons/fa";
+import { TbMessageChatbot } from "react-icons/tb";
 import { useLazyGetFeedbackQuery } from "../redux/services/feedback-api";
 import { useResolveError } from "../utils/error-utils";
 
@@ -47,20 +48,18 @@ function FormFieldFeedbackRenderer({ name }: Props) {
       </div>
 
       {feedbackResult && (
-        <TypographyStylesProvider>
-          <Text
-            size="sm"
-            dangerouslySetInnerHTML={{
-              __html: feedbackResult.annotatedContent,
-            }}
-          />
-          <Text
-            size="sm"
-            dangerouslySetInnerHTML={{
-              __html: feedbackResult.feedback,
-            }}
-          />
-        </TypographyStylesProvider>
+        <Blockquote color="blue" mt="xl" icon={<TbMessageChatbot size={30} />}>
+          <Paper withBorder shadow="xl" p="xl">
+            <Text size="sm">
+              Here is some feedback on what you have written:
+              <br />
+              <br />
+            </Text>
+            <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+              {feedbackResult.feedback}
+            </Text>
+          </Paper>
+        </Blockquote>
       )}
     </Stack>
   );

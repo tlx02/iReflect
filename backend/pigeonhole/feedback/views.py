@@ -96,17 +96,23 @@ def askChatGPT(text):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     # Text prompt to generate feedback for the given reflection text
-    prompt = "The following is my individual reflection on my experience so far taking a university course. \
-        To aid my reflective learning process, assess the reflection and provide feedback based on Rolfe et al.'s Reflective Model. \
-        Format your feedback succinctly into the different stages, each mentioning what was done good and how I could improve it. \
+    prompt = "You are an educator at a university. You will be given a student's individual reflection on their experience so far in their course. \
+        To aid their reflective learning process, assess the reflection and provide feedback based on Rolfe et al.'s Reflective Model's three stages: (Descriptive: What?), (Theoretical: So What?), (Action-Oriented: Now What?). \
+        Format your feedback succinctly into the three different stages, each mentioning if the stage was fulfilled well and how they can improve on it. \
         Add only minimal headers for each stage."
 
     query = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{
-            "role": "user", 
-            "content": prompt + "\n\n" + text
-            }]
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system", 
+                "content": prompt
+            },
+            {
+                "role": "user", 
+                "content": text
+            }],
+        temperature=0.1
     )
   
     response = query.choices[0].message.content 

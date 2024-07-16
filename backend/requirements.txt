@@ -14,4 +14,4 @@ colorlog
 requests
 selenium
 sendgrid
-openai
+openai==1.35.14

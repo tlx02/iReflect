@@ -2,6 +2,8 @@ import logging
 from collections import Counter
 
 from django.db.models import Q, QuerySet, Prefetch
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -104,6 +106,7 @@ logger = logging.getLogger("main")
 
 # Create your views here.
 class MyCoursesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     def get(self, request, requester: User):
         ## only show courses which are published or if course membership role is above STUDENT
@@ -162,6 +165,7 @@ class MyCoursesView(APIView):
 
 
 class SingleCourseView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -254,6 +258,7 @@ class SingleCourseView(APIView):
 
 
 class CourseMilestonesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -310,6 +315,7 @@ class CourseMilestonesView(APIView):
 
 
 class SingleCourseMilestoneView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -383,6 +389,7 @@ class SingleCourseMilestoneView(APIView):
 
 
 class CourseMembershipsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -484,6 +491,7 @@ class SingleCourseMembershipView(APIView):
 
 
 class CourseGroupsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -554,6 +562,7 @@ class CourseGroupsView(APIView):
 
 
 class SingleCourseGroupView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -658,6 +667,7 @@ class SingleCourseGroupView(APIView):
 
 
 class CourseMilestoneTemplatesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -713,6 +723,7 @@ class CourseMilestoneTemplatesView(APIView):
 
 
 class SingleCourseMilestoneTemplateView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -784,6 +795,7 @@ class SingleCourseMilestoneTemplateView(APIView):
 
 
 class CourseSubmissionsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -859,6 +871,7 @@ class CourseSubmissionsView(APIView):
 
 
 class SingleCourseSubmissionView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -946,6 +959,7 @@ class SingleCourseSubmissionView(APIView):
 
 
 class CourseSubmissionFieldCommentsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -976,6 +990,7 @@ class CourseSubmissionFieldCommentsView(APIView):
 
 
 class CourseSubmissionSingleFieldCommentsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -1171,6 +1186,7 @@ class CourseMembershipsWithNewUserCreationView(APIView):
 
 
 class CourseSubmissionViewableGroupsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.INSTRUCTOR, Role.CO_OWNER)

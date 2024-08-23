@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import django_update_from_dict
+import pigeonhole.common.utils
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='User',
@@ -41,6 +41,6 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
     ]

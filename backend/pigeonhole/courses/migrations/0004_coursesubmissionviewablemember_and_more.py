@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import django_update_from_dict
+import pigeonhole.common.utils
 
 
 class Migration(migrations.Migration):
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursemembership')),
                 ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursesubmission')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseSubmissionViewableGroup',
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursegroup')),
                 ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursesubmission')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.AddConstraint(
             model_name='coursesubmissionviewablemember',

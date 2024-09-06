@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         
     - name: Build the Docker images
-      run: docker-compose -f ./PM-Tracker/docker-compose.production.yml build
+      run: docker compose -f docker-compose.production.yml build
 
     - name: Get the latest SHA hash
       id: vars

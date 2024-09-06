@@ -1,0 +1,76 @@
+name: Build and Push Docker Images CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build_and_push_to_prod:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v4
+      
+    - name: Create backend .env file
+      uses: SpicyPizza/create-envfile@v2.0.3
+      with:        
+        envkey_DEBUG: ${{ vars.DEBUG }}
+        envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        envkey_DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
+        envkey_SQL_ENGINE: ${{ vars.SQL_ENGINE }}
+        envkey_SQL_DATABASE: ${{ vars.SQL_DATABASE }}
+        envkey_SQL_USER: ${{ vars.SQL_USER }}
+        envkey_SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+        envkey_SQL_HOST: ${{ vars.SQL_HOST }}
+        envkey_SQL_PORT: ${{ vars.SQL_PORT }}
+        envkey_DATABASE: ${{ vars.DATABASE }}
+        envkey_SUPERUSER: ${{ vars.SUPERUSER }}
+        envkey_SUPERUSER_EMAIL: ${{ vars.SUPERUSER_EMAIL }}
+        envkey_SUPERUSER_PASSWORD: ${{ secrets.SUPERUSER_PASSWORD }}
+        envkey_HOST: ${{ vars.HOST }}
+        envkey_SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        envkey_SENDER_EMAIL_ADDRESS: ${{ vars.SENDER_EMAIL_ADDRESS }}
+        envkey_PASSWORD_RESET_EMAIL_TEMPLATE_ID: ${{ vars.PASSWORD_RESET_EMAIL_TEMPLATE_ID }}
+        envkey_PASSWORD_RESET_CONFIRMATION_EMAIL_TEMPLATE_ID: ${{ vars.PASSWORD_RESET_CONFIRMATION_EMAIL_TEMPLATE_ID }}
+        envkey_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        some_other_variable: foobar
+        file_name: .env.backend.production.local
+
+    - name: Create db .env file
+      uses: SpicyPizza/create-envfile@v2.0.3
+      with:        
+        POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+        file_name: .env.db.production.local
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build the Docker images
+      run: docker-compose -f ./PM-Tracker/docker-compose.production.yml build
+
+    - name: Get the latest SHA hash
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      
+    - name: Add tags with commit SHA hash
+      run: |
+        docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-reverse-proxy:production \
+          ${{ vars.DOCKERHUB_USERNAME }}/ireflect-reverse-proxy:production-${{ steps.vars.outputs.sha_short }}
+        docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-frontend:production \
+          ${{ vars.DOCKERHUB_USERNAME }}/ireflect-frontend:production-${{ steps.vars.outputs.sha_short }}
+        docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend:production |
+          ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend:production-${{ steps.vars.outputs.sha_short }}
+      
+    - name: Push images to docker registry
+      run: |
+        docker push ${{ vars.DOCKERHUB_USERNAME }}/ireflect-reverse-proxy --all-tags
+        docker push ${{ vars.DOCKERHUB_USERNAME }}/ireflect-frontend --all-tags
+        docker push ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend --all-tags

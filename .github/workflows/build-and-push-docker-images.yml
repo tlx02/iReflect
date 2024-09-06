@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         
     - name: Build the Docker images
-      run: docker-compose -f ./PM-Tracker/docker-compose.production.yml build
+      run: docker compose -f docker-compose.production.yml build
 
     - name: Get the latest SHA hash
       id: vars
@@ -67,7 +67,7 @@ jobs:
           ${{ vars.DOCKERHUB_USERNAME }}/ireflect-reverse-proxy:production-${{ steps.vars.outputs.sha_short }}
         docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-frontend:production \
           ${{ vars.DOCKERHUB_USERNAME }}/ireflect-frontend:production-${{ steps.vars.outputs.sha_short }}
-        docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend:production |
+        docker tag ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend:production \
           ${{ vars.DOCKERHUB_USERNAME }}/ireflect-backend:production-${{ steps.vars.outputs.sha_short }}
       
     - name: Push images to docker registry

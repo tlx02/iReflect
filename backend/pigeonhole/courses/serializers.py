@@ -222,3 +222,6 @@ class CourseMemberCreationDataSerializer(serializers.Serializer):
 
 class BatchMembershipCreationSerializer(serializers.Serializer):
     member_creation_data = serializers.JSONField()
+
+class PutCourseSubmissionViewableGroupsSerializer(serializers.Serializer):
+    group_ids = serializers.ListField(child=IdField(required=True))

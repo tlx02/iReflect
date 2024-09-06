@@ -15,7 +15,7 @@ import {
   Loader,
   SelectItem,
 } from "@mantine/core";
-import { GoDashboard } from "react-icons/go";
+import { AiOutlineDashboard } from "react-icons/ai";
 import { FaInfo } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 import {
@@ -276,7 +276,7 @@ function SubmissionForm(
               <Alert
                 p="xs"
                 color="orange"
-                icon={<GoDashboard />}
+                icon={<AiOutlineDashboard />}
                 title="Test mode"
               >
                 This form is in test mode. You can test this form by filling in

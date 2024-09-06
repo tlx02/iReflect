@@ -3,7 +3,7 @@ version: "3.8"
 services:
   ## entry point for ireflect app containers
   app-reverse-proxy:
-    image: jermytan/ireflect-reverse-proxy
+    image: szelongq/ireflect-reverse-proxy
     build:
       context: ./app-reverse-proxy
     volumes:
@@ -20,7 +20,7 @@ services:
 
   ## can only be accessed within frontend network
   frontend:
-    image: jermytan/ireflect-frontend
+    image: szelongq/ireflect-frontend
     build:
       context: ./frontend
       args:
@@ -34,7 +34,7 @@ services:
 
   ## can only be accessed within backend network
   backend:
-    image: jermytan/ireflect-backend
+    image: szelongq/ireflect-backend
     build:
       context: ./backend
     command: sh -c "cd pigeonhole && gunicorn pigeonhole.wsgi:application --bind 0.0.0.0:8000"

@@ -6,6 +6,7 @@ import { SubmissionSummaryData } from "../types/submissions";
 import { colorModeValue } from "../utils/theme-utils";
 import { sort, displayDateTime } from "../utils/transform-utils";
 import SubmissionTypeIconLabel from "./submission-type-icon-label";
+import { VisibilityStatus } from "../types/enums";
 
 const useStyles = createStyles((theme) => ({
   row: {
@@ -51,7 +52,16 @@ function CourseSubmissionsTable({ submissions }: Props) {
       </thead>
       <tbody>
         {sortedSubmissions.map(
-          ({ id, name, submissionType, group, editor, updatedAt, isDraft }) => (
+          ({
+            id,
+            name,
+            submissionType,
+            group,
+            editor,
+            updatedAt,
+            isDraft,
+            visibility,
+          }) => (
             <tr
               key={id}
               className={cx(
@@ -97,7 +107,11 @@ function CourseSubmissionsTable({ submissions }: Props) {
               <td>{group?.name ?? ""}</td>
               <td>{editor?.name ?? ""}</td>
               <td>{displayDateTime(updatedAt, DATE_TIME_MONTH_NAME_FORMAT)}</td>
-              <td>Private</td>
+              <td>
+                {visibility === VisibilityStatus.Private
+                  ? "Private"
+                  : "Published"}
+              </td>
             </tr>
           ),
         )}

@@ -1,9 +1,11 @@
+import { GroupData } from "../../types/groups";
 import {
   SubmissionData,
   SubmissionDataWithComments,
   SubmissionPostData,
   SubmissionPutData,
   SubmissionSummaryData,
+  SubmissionViewableGroupsPutData,
 } from "../../types/submissions";
 import { sanitizeObject } from "../../utils/transform-utils";
 import { cacher } from "./api-cache-utils";
@@ -127,6 +129,39 @@ const submissionsApi = baseApi
         invalidatesTags: (_, error, { submissionId: id, courseId }) =>
           error ? [] : [cacher.getIdTag(id, "Submission", [courseId])],
       }),
+
+      getSubmissionViewableGroups: build.query<
+        GroupData[],
+        { courseId: string | number; submissionId: string | number }
+      >({
+        query: ({ courseId, submissionId }) => ({
+          url: `/courses/${courseId}/submissions/${submissionId}/viewable-groups`,
+          method: "GET",
+        }),
+        providesTags: (_, __, { submissionId: id, courseId }) => [
+          cacher.getIdTag(id, "Submission", [courseId]),
+        ],
+      }),
+
+      updateSubmissionViewableGroups: build.mutation<
+        GroupData[],
+        SubmissionViewableGroupsPutData & {
+          courseId: string | number;
+          submissionId: string | number;
+        }
+      >({
+        query: ({
+          courseId,
+          submissionId,
+          ...submissionViewableGroupsPutData
+        }) => ({
+          url: `/courses/${courseId}/submissions/${submissionId}/viewable-groups`,
+          method: "PUT",
+          body: submissionViewableGroupsPutData,
+        }),
+        invalidatesTags: (_, error, { submissionId: id, courseId }) =>
+          error ? [] : [cacher.getIdTag(id, "Submission", [courseId])],
+      }),
     }),
   });
 
@@ -140,4 +175,6 @@ export const {
   useGetSingleSubmissionQuery,
   useUpdateSubmissionMutation,
   useDeleteSubmissionMutation,
+  useGetSubmissionViewableGroupsQuery,
+  useUpdateSubmissionViewableGroupsMutation,
 } = submissionsApi;

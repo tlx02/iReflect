@@ -31,3 +31,12 @@ export type PasswordLoginPostData = PasswordPayloadPostData & {
   [NAME]: string;
   [EMAIL]: string;
 };
+
+export type PasswordResetDetails = {
+  ["isResetSuccess"]: boolean;
+};
+
+export type PasswordResetPostData = PasswordPayloadPostData & {
+  ["uid"]: string;
+  ["token"]: string;
+};

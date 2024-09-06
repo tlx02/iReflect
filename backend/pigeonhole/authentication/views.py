@@ -6,6 +6,7 @@ from .serializers import (
     AccessTokenRefreshSerializer,
     CheckAccountSerializer,
     PasswordResetSerializer,
+    PasswordResetConfirmSerializer,
 )
 
 # Create your views here.
@@ -31,3 +32,7 @@ class CheckAccountView(TokenViewBase):
 
 class PasswordResetView(TokenViewBase):
     serializer_class = PasswordResetSerializer
+
+
+class PasswordResetConfirmView(TokenViewBase):
+    serializer_class = PasswordResetConfirmSerializer

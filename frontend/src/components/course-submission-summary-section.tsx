@@ -5,6 +5,7 @@ import { SubmissionSummaryData } from "../types/submissions";
 import { displayDateTime } from "../utils/transform-utils";
 import SubmissionTypeIconLabel from "./submission-type-icon-label";
 import TextViewer from "./text-viewer";
+import { VisibilityStatus } from "../types/enums";
 
 type Props = SubmissionSummaryData;
 
@@ -19,6 +20,7 @@ function CourseSubmissionSummarySection({
   creator,
   editor,
   group,
+  visibility,
 }: Props) {
   return (
     <Stack>
@@ -118,7 +120,9 @@ function CourseSubmissionSummarySection({
           <Text size="sm" weight={700}>
             Visibility
           </Text>
-          <Text size="sm">Private</Text>
+          <Text size="sm">
+            {visibility === VisibilityStatus.Private ? "Private" : "Published"}
+          </Text>
         </div>
       </SimpleGrid>
     </Stack>

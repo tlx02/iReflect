@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import requests
 import logging
@@ -25,8 +26,13 @@ from pigeonhole.common.exceptions import InternalServerError, BadRequest
 from users.models import User
 from users.logic import requester_to_json, get_users
 
-## from email_service.logic import send_password_reset_email
+from email_service.logic import send_password_reset_mail, send_password_reset_confirmation_mail
 from .logic import get_authenticated_data, reset_password
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from authentication.tokens import default_token_generator
 
 from .models import (
     AuthenticationData,
@@ -277,14 +283,43 @@ class PasswordResetSerializer(BaseAuthenticationSerializer):
         except User.DoesNotExist as e:
             logger.warning(e)
             self.raise_invalid_user()
+            
+        host = os.getenv('HOST')
+        uid_b64 = urlsafe_base64_encode(str(user.email).encode('utf-8'))
+        token = default_token_generator.make_token(user)
 
-        new_password = reset_password(user=user)
+        send_password_reset_mail(user.name, user.email, host, uid_b64, token)
+
+        return {'isResetSuccess': True}
+    
+class PasswordResetConfirmSerializer(BaseAuthenticationSerializer):
+    uid = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+    
+    def validate(self, data):
+        uid_b64 = data['uid']
+        token = data['token']
+
+        email = urlsafe_base64_decode(uid_b64).decode('ascii')
+
+        try:
+            user = get_users(email=email).get()
+        except User.DoesNotExist as e:
+            logger.warning(e)
+            self.raise_invalid_user()
+
+        if not default_token_generator.check_token(user, token):
+            raise AuthenticationFailed(detail="Invalid reset token.")
+            
+        new_password = data['password']
+        new_password = reset_password(user=user, new_password=new_password)
 
         if new_password is None:
             raise InternalServerError(
                 detail="An error has occurred while resetting the password."
             )
+        
+        send_password_reset_confirmation_mail(user.name, user.email)
 
-        ## send_password_reset_email(user=user, new_password=new_password)
-
-        return {EMAIL: user.email, NAME: user.name}
+        return {'isResetSuccess': True}

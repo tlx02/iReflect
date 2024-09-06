@@ -4,6 +4,8 @@ import {
   AccountDetails,
   PasswordLoginPostData,
   CheckAccountPostData,
+  PasswordResetDetails,
+  PasswordResetPostData,
 } from "../../types/auth";
 
 const authApi = baseApi.injectEndpoints({
@@ -24,7 +26,31 @@ const authApi = baseApi.injectEndpoints({
       }),
       extraOptions: { includeAuth: false },
     }),
+    passwordReset: build.query<PasswordResetDetails, CheckAccountPostData>({
+      query: (data) => ({
+        url: "/gateway/reset/",
+        method: "POST",
+        body: data,
+      }),
+      extraOptions: { includeAuth: false },
+    }),
+    passwordResetConfirm: build.mutation<
+      PasswordResetDetails,
+      PasswordResetPostData
+    >({
+      query: (data) => ({
+        url: "/gateway/reset-confirm/",
+        method: "POST",
+        body: data,
+      }),
+      extraOptions: { includeAuth: false },
+    }),
   }),
 });
 
-export const { usePasswordLoginMutation, useLazyCheckAccountQuery } = authApi;
+export const {
+  usePasswordResetConfirmMutation,
+  useLazyPasswordResetQuery,
+  usePasswordLoginMutation,
+  useLazyCheckAccountQuery,
+} = authApi;

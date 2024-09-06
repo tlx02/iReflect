@@ -1,6 +1,6 @@
 from django.db import models
 
-from django_update_from_dict import UpdateFromDictMixin
+from pigeonhole.common.utils import UpdateFromDictMixin
 
 
 class TimestampedModel(UpdateFromDictMixin, models.Model):

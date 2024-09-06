@@ -1,3 +1,5 @@
+import os
+from openai import OpenAI
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -88,6 +90,39 @@ def analyse(text):
     return results
 
 
+# Returns response from ChatGPT in a single string, which might contain newlines.
+
+def askChatGPT(text):
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    
+    # Text prompt to generate feedback for the given reflection text
+    prompt = "You are an educator at a university. You will be given a student's individual reflection on their experience so far in their course. \
+        To aid their reflective learning process, assess the reflection and provide feedback based on Rolfe et al.'s Reflective Model's three stages: (Descriptive: What?), (Theoretical: So What?), (Action-Oriented: Now What?). \
+        Format your feedback succinctly into the three different stages, each mentioning if the stage was fulfilled well and how they can improve on it. \
+        Add only minimal headers for each stage."
+
+    query = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system", 
+                "content": prompt
+            },
+            {
+                "role": "user", 
+                "content": text
+            }],
+        temperature=0.1
+    )
+  
+    response = query.choices[0].message.content 
+
+    # Log usage
+    print(query.usage) 
+
+    return response 
+
+
 # Create your views here.
 class FeedbackView(APIView):
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
@@ -96,7 +131,9 @@ class FeedbackView(APIView):
 
         serializer.is_valid(raise_exception=True)
 
-        annotated_content, feedback = analyse(serializer.validated_data["content"])
+        # No annotated content from ChatGPT, only feedback
+        annotated_content = ''
+        feedback = askChatGPT(serializer.validated_data["content"])
 
         data = {"annotated_content": annotated_content, "feedback": feedback}
 

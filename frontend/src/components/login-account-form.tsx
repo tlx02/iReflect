@@ -1,30 +1,20 @@
 import { useContext } from "react";
-import {
-  Button,
-  Stack,
-  createStyles,
-  Group,
-  Anchor,
-  Text,
-} from "@mantine/core";
+import { Button, Stack, createStyles, Group, Text } from "@mantine/core";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toastUtils from "../utils/toast-utils";
-import {
-  EMAIL,
-  NAME,
-  PASSWORD,
-  REMEMBER_ME,
-  SUPPORT_EMAIL,
-} from "../constants";
+import { EMAIL, NAME, PASSWORD, REMEMBER_ME } from "../constants";
 import TextField from "./text-field";
 import PasswordField from "./password-field";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { selectRememberMe } from "../redux/slices/remember-me-slice";
 import CheckboxField from "./checkbox-field";
 import loggedIn from "../redux/thunks/logged-in";
-import { usePasswordLoginMutation } from "../redux/services/auth-api";
+import {
+  usePasswordLoginMutation,
+  useLazyPasswordResetQuery,
+} from "../redux/services/auth-api";
 import { handleSubmitForm } from "../utils/form-utils";
 import { LoginContext } from "../contexts/login-provider";
 import { useResolveError } from "../utils/error-utils";
@@ -65,6 +55,9 @@ function LoginAccountForm() {
   const [passwordLogin] = usePasswordLoginMutation({
     selectFromResult: emptySelector,
   });
+  const [passwordReset] = useLazyPasswordResetQuery({
+    selectFromResult: emptySelector,
+  });
   const {
     accountDetails: { name, email, isActivated } = {
       name: "",
@@ -96,6 +89,18 @@ function LoginAccountForm() {
     dispatch(loggedIn(currentUser, rememberMe));
 
     toastUtils.success({ message: "Signed in successfully." });
+  };
+
+  const resetPassword = async () => {
+    try {
+      await passwordReset({ email }).unwrap();
+      toastUtils.success({
+        message:
+          "Password reset email sent. Check your email for the reset link.",
+      });
+    } catch (error) {
+      resolveError(error);
+    }
   };
 
   return (
@@ -137,13 +142,13 @@ function LoginAccountForm() {
               <CheckboxField name={REMEMBER_ME} label="Remember me" />
 
               {isActivated && (
-                <Anchor
-                  href={`mailto:${SUPPORT_EMAIL}?subject=[Forgot%20password]`}
-                  weight={600}
-                  size="sm"
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  onClick={() => resetPassword()}
                 >
                   Forgot password?
-                </Anchor>
+                </Button>
               )}
             </Group>
           </Stack>

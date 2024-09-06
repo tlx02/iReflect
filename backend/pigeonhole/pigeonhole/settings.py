@@ -31,9 +31,19 @@ DEBUG = bool(int(os.getenv("DEBUG", 0)))
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")
+
 CSRF_TRUSTED_ORIGINS = [
     f"http{'' if DEBUG else 's'}://{host}" for host in ALLOWED_HOSTS
 ]
+
+# Ensure CSRF cookies are only sent on same-site requests
+CSRF_COOKIE_SAMESITE = 'Strict'
+
+# Prevent JavaScript from accessing the CSRF cookie
+CSRF_COOKIE_HTTPONLY = True
+
+# Only send the CSRF cookie over HTTPS (useful in production)
+CSRF_COOKIE_SECURE = True
 
 SITE_ID = 1
 
@@ -221,6 +231,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_RESET_TIMEOUT = 1800   # 30 minutes
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

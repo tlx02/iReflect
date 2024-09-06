@@ -7,6 +7,7 @@ import {
   FORM_RESPONSE_DATA,
   GROUP,
   GROUP_ID,
+  GROUP_IDS,
   ID,
   IS_DRAFT,
   MILESTONE,
@@ -17,6 +18,7 @@ import {
   TEMPLATE,
   TEMPLATE_ID,
   TYPE,
+  VISIBILITY,
 } from "../constants";
 import { BaseData } from "./base";
 import { SubmissionCommentData } from "./comments";
@@ -35,6 +37,7 @@ import {
   TemplateData,
 } from "./templates";
 import { UserData } from "./users";
+import { VisibilityStatus } from "./enums";
 
 export const textFormResponseFieldSchema = textFormFieldSchema.extend({
   [RESPONSE]: z.string().trim(),
@@ -136,6 +139,7 @@ export type SubmissionViewData = Partial<BaseData> & {
   [GROUP]: Pick<GroupData, typeof ID | typeof NAME> | null;
   [TEMPLATE]: TemplateData | null;
   [FORM_RESPONSE_DATA]: FormResponseField[];
+  [VISIBILITY]: VisibilityStatus;
 };
 
 export type SubmissionPutData = Pick<
@@ -165,6 +169,7 @@ export type SubmissionSummaryData = BaseData &
     | typeof EDITOR
     | typeof MILESTONE
     | typeof GROUP
+    | typeof VISIBILITY
   >;
 
 export type SubmissionData = SubmissionSummaryData &
@@ -172,4 +177,8 @@ export type SubmissionData = SubmissionSummaryData &
 
 export type SubmissionDataWithComments = SubmissionData & {
   [COMMENTS]: SubmissionCommentData[];
+};
+
+export type SubmissionViewableGroupsPutData = {
+  [GROUP_IDS]: number[];
 };

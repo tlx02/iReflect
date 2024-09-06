@@ -31,6 +31,10 @@ import PlaceholderWrapper from "../placeholder-wrapper";
 import { DATE_TIME_MONTH_NAME_FORMAT, UNKNOWN_USER } from "../../constants";
 import { displayDateTime } from "../../utils/transform-utils";
 import useGetCourseMilestoneSubmissionPermissions from "../../custom-hooks/use-get-course-milestone-submission-permissions";
+import useGetCoursePermissions from "../../custom-hooks/use-get-course-permissions";
+import ConditionalRenderer from "../conditional-renderer";
+import { SubmissionType } from "../../types/templates";
+import CourseSubmissionPublishSection from "../course-submission-publish-section";
 
 const useStyles = createStyles({
   formContainer: {
@@ -87,6 +91,7 @@ function CourseMilestoneSubmissionsViewPage() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const modals = useModals();
+  const { canAccessFullDetails } = useGetCoursePermissions();
   const { canModify, canDelete } = useGetCourseMilestoneSubmissionPermissions();
 
   const onUpdateSubmission = async (formData: SubmissionFormData) => {
@@ -226,7 +231,21 @@ function CourseMilestoneSubmissionsViewPage() {
             </Group>
           )}
         </Group>
+      </Group>
 
+      <ConditionalRenderer
+        allow={
+          canAccessFullDetails &&
+          submission.submissionType === SubmissionType.Group
+        }
+      >
+        <CourseSubmissionPublishSection
+          courseId={courseId}
+          submissionId={submissionId}
+        />
+      </ConditionalRenderer>
+
+      <Group>
         <Button
           color="red"
           leftIcon={<FaTrashAlt size={12} />}

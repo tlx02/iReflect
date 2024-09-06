@@ -3,7 +3,6 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import django.db.models.expressions
-import django_update_from_dict
 import pigeonhole.common.utils
 
 
@@ -31,7 +30,7 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseGroup',
@@ -42,7 +41,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseMembership',
@@ -54,7 +53,7 @@ class Migration(migrations.Migration):
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseMilestone',
@@ -69,7 +68,7 @@ class Migration(migrations.Migration):
                 ('is_published', models.BooleanField()),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseMilestoneTemplate',
@@ -83,7 +82,7 @@ class Migration(migrations.Migration):
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
                 ('form', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='forms.form')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseSubmission',
@@ -106,7 +105,7 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseSettings',
@@ -127,7 +126,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'course settings',
             },
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.CreateModel(
             name='CourseGroupMember',
@@ -138,7 +137,7 @@ class Migration(migrations.Migration):
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursegroup')),
                 ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.coursemembership')),
             ],
-            bases=(django_update_from_dict.UpdateFromDictMixin, models.Model),
+            bases=(pigeonhole.common.utils.UpdateFromDictMixin, models.Model),
         ),
         migrations.AddConstraint(
             model_name='coursemilestonetemplate',

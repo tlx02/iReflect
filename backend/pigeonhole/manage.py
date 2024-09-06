@@ -6,7 +6,7 @@ import sys
 # use for dev
 from dotenv import load_dotenv
 
-load_dotenv(".env.backend.dev")
+load_dotenv(os.getcwd() + "/.env.backend.dev")
 
 
 def main():

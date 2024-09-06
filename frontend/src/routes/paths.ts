@@ -26,3 +26,4 @@ export const COURSE_MILESTONE_TEMPLATES_EDIT_PATH =
 export const COURSE_GROUPS_PATH = "/courses/:courseId/groups";
 export const COURSE_DETAILS_PATH = "/courses/:courseId/details";
 export const ACCOUNT_PATH = "/account";
+export const RESET_PASSWORD_CONFIRM_PATH = "/password-reset/:uid/:token";

@@ -2,6 +2,8 @@ import logging
 from collections import Counter
 
 from django.db.models import Q, QuerySet, Prefetch
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -27,6 +29,7 @@ from .models import (
 )
 from .logic import (
     batch_update_course_group_members,
+    batch_update_course_submission_viewable_groups,
     can_create_course_group,
     can_delete_course_group,
     can_delete_course_submission,
@@ -86,6 +89,7 @@ from .serializers import (
     PatchCourseMembershipSerializer,
     PutCourseSubmissionCommentSerializer,
     PutCourseSubmissionSerializer,
+    PutCourseSubmissionViewableGroupsSerializer,
 )
 from .middlewares import (
     check_course,
@@ -102,6 +106,7 @@ logger = logging.getLogger("main")
 
 # Create your views here.
 class MyCoursesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     def get(self, request, requester: User):
         ## only show courses which are published or if course membership role is above STUDENT
@@ -160,6 +165,7 @@ class MyCoursesView(APIView):
 
 
 class SingleCourseView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -252,6 +258,7 @@ class SingleCourseView(APIView):
 
 
 class CourseMilestonesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -308,6 +315,7 @@ class CourseMilestonesView(APIView):
 
 
 class SingleCourseMilestoneView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -381,6 +389,7 @@ class SingleCourseMilestoneView(APIView):
 
 
 class CourseMembershipsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -482,6 +491,7 @@ class SingleCourseMembershipView(APIView):
 
 
 class CourseGroupsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -552,6 +562,7 @@ class CourseGroupsView(APIView):
 
 
 class SingleCourseGroupView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -656,6 +667,7 @@ class SingleCourseGroupView(APIView):
 
 
 class CourseMilestoneTemplatesView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -711,6 +723,7 @@ class CourseMilestoneTemplatesView(APIView):
 
 
 class SingleCourseMilestoneTemplateView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -782,6 +795,7 @@ class SingleCourseMilestoneTemplateView(APIView):
 
 
 class CourseSubmissionsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -857,6 +871,7 @@ class CourseSubmissionsView(APIView):
 
 
 class SingleCourseSubmissionView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -944,6 +959,7 @@ class SingleCourseSubmissionView(APIView):
 
 
 class CourseSubmissionFieldCommentsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -974,6 +990,7 @@ class CourseSubmissionFieldCommentsView(APIView):
 
 
 class CourseSubmissionSingleFieldCommentsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
     @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
     @check_course
     @check_requester_membership(Role.STUDENT, Role.INSTRUCTOR, Role.CO_OWNER)
@@ -1164,5 +1181,57 @@ class CourseMembershipsWithNewUserCreationView(APIView):
         # return all members
         memberships = CourseMembership.objects.filter(user__email__in=emails)
         data = [course_membership_to_json(membership) for membership in memberships]
+
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class CourseSubmissionViewableGroupsView(APIView):
+    @method_decorator(cache_control(no_cache=True))
+    @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
+    @check_course
+    @check_requester_membership(Role.INSTRUCTOR, Role.CO_OWNER)
+    @check_submission
+    def get(
+        self,
+        request,
+        requester: User,
+        course: Course,
+        requester_membership: CourseMembership,
+        submission: CourseSubmission,
+    ):
+        viewable_groups: QuerySet[CourseGroup] = submission.coursesubmissionviewablegroup_set.prefetch_related('group')
+
+        data = [course_group_to_json(viewable_group.group) for viewable_group in viewable_groups]
+
+        return Response(data=data, status=status.HTTP_200_OK)
+    
+    @check_account_access(AccountType.STANDARD, AccountType.EDUCATOR, AccountType.ADMIN)
+    @check_course
+    @check_requester_membership(Role.INSTRUCTOR, Role.CO_OWNER)
+    @check_submission
+    def put(
+        self,
+        request,
+        requester: User,
+        course: Course,
+        requester_membership: CourseMembership,
+        submission: CourseSubmission,
+    ):
+        serializer = PutCourseSubmissionViewableGroupsSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        try:
+            updated_viewable_groups = batch_update_course_submission_viewable_groups(
+                course=course, submission=submission, group_ids=validated_data["group_ids"]
+            )
+        except ValueError as e:
+            raise BadRequest(detail=e)
+
+        data = [
+            course_group_to_json(viewable_group.group) 
+            for viewable_group in updated_viewable_groups
+        ]
 
         return Response(data=data, status=status.HTTP_200_OK)

@@ -265,6 +265,11 @@ function SubmissionForm(
     await handleOnSubmit?.(formData);
   };
 
+  const feedbackContextValue = useMemo(() => ({
+    testMode, 
+    submissionId
+  }), [testMode, submissionId])
+
   return (
     <FormProvider {...methods}>
       <form
@@ -358,7 +363,7 @@ function SubmissionForm(
           )}
 
           {fields.map(({ id, ...field }, index) => (
-            <FeedbackContext.Provider value={{testMode, submissionId}}>
+            <FeedbackContext.Provider value={feedbackContextValue}>
               <FormFieldRenderer
                 key={id}
                 name={`${FORM_RESPONSE_DATA}.${index}.${RESPONSE}`}

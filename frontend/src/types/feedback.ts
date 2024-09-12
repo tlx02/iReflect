@@ -1,8 +1,5 @@
-import { ANNOTATED_CONTENT, CONTENT, CREATED, CREATOR, FEEDBACK, ID, INITIAL_RESPONSE, MILESTONE, NAME, QUESTION, SUBMISSION_ID, TEMPLATE } from "../constants";
+import { ANNOTATED_CONTENT, CONTENT, CREATED, FEEDBACK, INITIAL_RESPONSE, QUESTION, SUBMISSION_ID } from "../constants";
 import { BaseData } from "./base";
-import { MilestoneData } from "./milestones";
-import { TemplateData } from "./templates";
-import { UserData } from "./users";
 
 export type FeedbackData = {
   [ANNOTATED_CONTENT]: string;

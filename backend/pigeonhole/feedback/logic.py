@@ -100,8 +100,6 @@ def analyse(text):
 
 def askChatGPT(text):
 
-    return "Testing"
-
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     # Text prompt to generate feedback for the given reflection text

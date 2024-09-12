@@ -36,7 +36,7 @@ function FormFieldFeedbackRenderer({ name, question, collectData }: Props) {
 
   const onGenerateFeedback = async () => {
     const content = getValues(name);
-    if (isFetching || !content) {
+    if (isFetching || !content || isLoading) {
       return;
     }
 

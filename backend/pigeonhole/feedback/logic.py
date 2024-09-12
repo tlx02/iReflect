@@ -103,10 +103,20 @@ def askChatGPT(text):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     # Text prompt to generate feedback for the given reflection text
-    prompt = "You are an educator at a university. You will be given a student's individual reflection on their experience so far in their course. \
-        To aid their reflective learning process, assess the reflection and provide feedback based on Rolfe et al.'s Reflective Model's three stages: (Descriptive: What?), (Theoretical: So What?), (Action-Oriented: Now What?). \
-        Format your feedback succinctly into the three different stages, each mentioning if the stage was fulfilled well and how they can improve on it. \
-        Add only minimal headers for each stage."
+    prompt = "You are an educator with 30 years of education experience in guiding students through reflective learning." + \
+            "Use the following step-by-step instructions to grade the given reflection and give feedback directed to the student, using only plaintext without any styling:" +\
+            "Step 1) Analyse and grade the reflection by each stage of reflection using the following reflective writing assessment rubrics. Each section is worth up to 2 marks. A score of 2 should only be given with sufficient details and elaboration from the student." + \
+            "<Rubrics Start>" + \
+            "Rubrics:" + \
+            "Stage 1. Returning to Experience: Statement provides description of the task chronologically and is clear of any judgements" + \
+            "Stage 2. Attending to Feelings: Statement conveys personal feelings, thoughts (positive and or negative) of the experience and relates to future personal learning" + \
+            "Stage 3. Integration: Statement clearly provides evidence of integration of prior knowledge, feelings, or attitudes with new knowledge, feelings, or attitudes, thus arriving at new perspectives." + \
+            "Stage 4. Appropriation: Statement clearly shows evidence that inferences have been made using their own prior knowledge and previous experience throughout the task" + \
+            "Stage 5. Outcomes of Reflection: Statement clearly shows evidence of reflection and clearly states: (1) a change in behaviour or development of new perspectives as a result of the task; (2) ability to reflect on own task, apply new knowledge feelings, thoughts, opinions to enhance new future experiences; and (3) examples" + \
+            "Additional Stage. Readability and Accuracy: Clear, engaging, accurate and comprehensive text." + \
+            "<Rubrics End>" + \
+            "Step 2) Display the results by each grading category. For each category, briefly explain what was done well, and if a full score of 2 was not obtained, add some suggestions on how to improve to get a better score." + \
+            "Step 3) Tally the overall grade and give an overall summary."
 
     query = client.chat.completions.create(
         model="gpt-4o",

@@ -1,4 +1,5 @@
-import { ANNOTATED_CONTENT, CONTENT, FEEDBACK } from "../constants";
+import { ANNOTATED_CONTENT, CONTENT, CREATED, FEEDBACK, INITIAL_RESPONSE, QUESTION, SUBMISSION_ID } from "../constants";
+import { BaseData } from "./base";
 
 export type FeedbackData = {
   [ANNOTATED_CONTENT]: string;
@@ -7,4 +8,15 @@ export type FeedbackData = {
 
 export type FeedbackPostData = {
   [CONTENT]: string;
+};
+
+export type FeedbackInitialResponseData = {
+  [CREATED]: boolean;
+  [INITIAL_RESPONSE]: string;
+};
+
+export type FeedbackInitialResponsePostData = Partial<BaseData> & {
+  [SUBMISSION_ID]: string | number;
+  [QUESTION]: string;
+  [INITIAL_RESPONSE]: string;
 };

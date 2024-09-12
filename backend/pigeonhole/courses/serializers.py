@@ -177,6 +177,7 @@ class GetCourseSubmissionSerializer(serializers.Serializer):
     full = serializers.BooleanField(required=False, default=False)
 
 
+# Serializer for requests to update course submission
 class PutCourseSubmissionSerializer(serializers.ModelSerializer):
     group_id = IdField(required=True, allow_null=True)
     ## need to override auto-generated one to make it required
@@ -195,6 +196,7 @@ class PutCourseSubmissionSerializer(serializers.ModelSerializer):
         )
 
 
+# Serializer for request to create new course submission
 class PostCourseSubmissionSerializer(PutCourseSubmissionSerializer):
     milestone_id = IdField(required=True)
     template_id = IdField(required=True)

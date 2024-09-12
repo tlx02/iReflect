@@ -2,6 +2,7 @@ import { z, ZodDiscriminatedUnionOption } from "zod";
 import { MdPerson, MdPeopleAlt, MdOutlinePeopleAlt } from "react-icons/md";
 import {
   CHOICES,
+  COLLECT_DATA,
   CONTENT,
   DESCRIPTION,
   FORM_FIELD_DATA,
@@ -79,6 +80,7 @@ export const textAreaFormFieldSchema = superFormFieldSchema
   })
   .extend({
     [TYPE]: z.literal(FormFieldType.TextArea),
+    [COLLECT_DATA]: z.boolean().optional(),
   });
 
 export const numericFormFieldSchema = superFormFieldSchema

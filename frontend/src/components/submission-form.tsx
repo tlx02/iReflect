@@ -50,6 +50,7 @@ import SwitchField from "./switch-field";
 import SubmissionFormDraftAlert from "./submission-form-draft-alert";
 import { useGetCourseGroupsQuery } from "../redux/services/groups-api";
 import SelectField from "./select-field";
+import { FeedbackContext } from "../contexts/feedback-data-collection-provider";
 
 const schema = z
   .object({
@@ -357,14 +358,16 @@ function SubmissionForm(
           )}
 
           {fields.map(({ id, ...field }, index) => (
-            <FormFieldRenderer
-              key={id}
-              name={`${FORM_RESPONSE_DATA}.${index}.${RESPONSE}`}
-              index={index}
-              formField={field as FormField}
-              readOnly={readOnly}
-              withComments={withComments}
-            />
+            <FeedbackContext.Provider value={{testMode, submissionId}}>
+              <FormFieldRenderer
+                key={id}
+                name={`${FORM_RESPONSE_DATA}.${index}.${RESPONSE}`}
+                index={index}
+                formField={field as FormField}
+                readOnly={readOnly}
+                withComments={withComments}
+              />
+            </FeedbackContext.Provider>
           ))}
 
           {!readOnly && (

@@ -265,10 +265,13 @@ function SubmissionForm(
     await handleOnSubmit?.(formData);
   };
 
-  const feedbackContextValue = useMemo(() => ({
-    testMode, 
-    submissionId
-  }), [testMode, submissionId])
+  const feedbackContextValue = useMemo(
+    () => ({
+      testMode,
+      submissionId,
+    }),
+    [testMode, submissionId],
+  );
 
   return (
     <FormProvider {...methods}>

@@ -236,11 +236,13 @@ function FormFieldRenderer({
       return null;
     }
 
-    return <FormFieldFeedbackRenderer 
-        name={name} 
+    return (
+      <FormFieldFeedbackRenderer
+        name={name}
         question={formField.label}
-        collectData={formField.collectData} 
-      />;
+        collectData={formField.collectData}
+      />
+    );
   })();
 
   return mainComponent ? (

@@ -1,4 +1,9 @@
-import { FeedbackData, FeedbackInitialResponseData, FeedbackInitialResponsePostData, FeedbackPostData } from "../../types/feedback";
+import {
+  FeedbackData,
+  FeedbackInitialResponseData,
+  FeedbackInitialResponsePostData,
+  FeedbackPostData,
+} from "../../types/feedback";
 import baseApi from "./base-api";
 
 const feedbackApi = baseApi.injectEndpoints({
@@ -11,15 +16,19 @@ const feedbackApi = baseApi.injectEndpoints({
       }),
     }),
     createInitialResponseIfNotExists: build.mutation<
-        FeedbackInitialResponseData, 
-        FeedbackInitialResponsePostData>({
-        query: ({ ...feedbackPostData }) => ({
-          url: "/feedback/initial-response/",
-          method: "POST",
-          body: feedbackPostData,
-        }),
+      FeedbackInitialResponseData,
+      FeedbackInitialResponsePostData
+    >({
+      query: ({ ...feedbackPostData }) => ({
+        url: "/feedback/initial-response/",
+        method: "POST",
+        body: feedbackPostData,
       }),
+    }),
   }),
 });
 
-export const { useLazyGetFeedbackQuery, useCreateInitialResponseIfNotExistsMutation } = feedbackApi;
+export const {
+  useLazyGetFeedbackQuery,
+  useCreateInitialResponseIfNotExistsMutation,
+} = feedbackApi;

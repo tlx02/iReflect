@@ -1,4 +1,12 @@
-import { ANNOTATED_CONTENT, CONTENT, CREATED, FEEDBACK, INITIAL_RESPONSE, QUESTION, SUBMISSION_ID } from "../constants";
+import {
+  ANNOTATED_CONTENT,
+  CONTENT,
+  CREATED,
+  FEEDBACK,
+  INITIAL_RESPONSE,
+  QUESTION,
+  SUBMISSION_ID,
+} from "../constants";
 import { BaseData } from "./base";
 
 export type FeedbackData = {

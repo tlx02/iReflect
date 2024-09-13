@@ -104,7 +104,7 @@ def askChatGPT(text):
     
     # Text prompt to generate feedback for the given reflection text
     prompt = "You are an educator with 30 years of education experience in guiding students through reflective learning." + \
-            "Use the following step-by-step instructions to grade the given reflection and give feedback directed to the student, using only plaintext without any styling:" +\
+            "Use the following step-by-step instructions to grade the given reflection and give feedback directed to the student:" +\
             "Step 1) Analyse and grade the reflection by each stage of reflection using the following reflective writing assessment rubrics. Each section is worth up to 2 marks. A score of 2 should only be given with sufficient details and elaboration from the student." + \
             "<Rubrics Start>" + \
             "Rubrics:" + \

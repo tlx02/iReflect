@@ -1,9 +1,9 @@
 import { ElementRef, useMemo, useRef } from "react";
-import { Button, Group, Paper, Stack, Text } from "@mantine/core";
+import { Button, Group, Paper, Select, Stack, Text } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
 import { useModals } from "@mantine/modals";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-import { RiFileEditLine } from "react-icons/ri";
+import { RiFileCopyLine, RiFileEditLine } from "react-icons/ri";
 import { FaTrashAlt } from "react-icons/fa";
 import { generatePath, Link, useNavigate } from "react-router-dom";
 import useGetCourseId from "../../custom-hooks/use-get-course-id";
@@ -21,6 +21,7 @@ import useGetTemplatePermissions from "../../custom-hooks/use-get-template-permi
 import ConditionalRenderer from "../conditional-renderer";
 import useGetFormContainerStyle from "../../custom-hooks/use-get-form-container-style";
 import { transformTemplateToSubmissionView } from "../../utils/transform-utils";
+import MilestoneTemplateCopyToSelection from "../milestone-template-copy-to-selection";
 
 function CourseMilestoneTemplatesViewPage() {
   const courseId = useGetCourseId();
@@ -100,6 +101,26 @@ function CourseMilestoneTemplatesViewPage() {
     formRef.current?.reset(submissionView);
   }, [submissionView]);
 
+  const openCopyTemplateModal = () => {
+    if (!courseId || !templateId) {
+      return;
+    }
+
+    const id = modals.openModal({
+      title: <Text weight="bold">Copy Template to Another Course</Text>,
+      children: (
+        <MilestoneTemplateCopyToSelection
+          navigate={navigate}
+          courseId={courseId}
+          templateId={templateId}
+          onSuccess={() => modals.closeModal(id)}
+        />
+      ),
+      size: "xl",
+      centered: true,
+    });
+  };
+
   return (
     <PlaceholderWrapper
       py={150}
@@ -110,6 +131,15 @@ function CourseMilestoneTemplatesViewPage() {
         <Stack>
           <ConditionalRenderer allow={canModify || canDelete}>
             <Group position="right">
+              <ConditionalRenderer allow={canModify}>
+                <Button
+                  color="teal"
+                  onClick={openCopyTemplateModal}
+                  leftIcon={<RiFileCopyLine />}
+                >
+                  Copy Template
+                </Button>
+              </ConditionalRenderer>
               <ConditionalRenderer allow={canModify}>
                 <Button<typeof Link>
                   component={Link}

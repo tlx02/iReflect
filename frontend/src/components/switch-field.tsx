@@ -11,7 +11,7 @@ function SwitchField({ name, ...props }: Props) {
   const {
     field: { value, ...other },
     fieldState: { error },
-  } = useController<{ [name: string]: boolean }>({ name });
+  } = useController<{ [name: string]: boolean }>({ name, defaultValue: false });
 
   useEffect(() => {
     if (error?.message) {

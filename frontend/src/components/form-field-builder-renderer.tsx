@@ -122,18 +122,7 @@ function FormFieldBuilderRenderer({ formFieldType, builderName }: Props) {
           <SwitchField
             key={hasFeedbackFieldName}
             name={hasFeedbackFieldName}
-            label={
-              <Text size="sm">
-                Enable automated reflective feedback (see{" "}
-                <Anchor
-                  inherit
-                  href="https://acawriter-demo.utscic.edu.au/demo"
-                >
-                  AcaWriter
-                </Anchor>
-                )
-              </Text>
-            }
+            label={<Text size="sm">Enable automated reflective feedback</Text>}
           />
         );
       }

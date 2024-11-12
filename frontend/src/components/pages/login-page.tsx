@@ -21,6 +21,13 @@ const useStyles = createStyles((theme) => ({
       lightModeValue: theme.colors.gray[0],
       darkModeValue: theme.colors.dark[8],
     }),
+    backgroundImage: colorModeValue(theme.colorScheme, {
+      lightModeValue: `url(https://i.imgur.com/S19lB66.png)`,
+      darkModeValue: `url(https://i.imgur.com/xk8SGwG.png)`,
+    }),
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
   },
   container: {
     width: "100%",
@@ -46,7 +53,7 @@ function LoginPage({ isPasswordReset }: LoginPageProps) {
           <ColorModeToggler />
         </Group>
 
-        <Container className={classes.container} size={450} p={32}>
+        <Container className={classes.container} size={500} p={32}>
           <LoginSection isPasswordReset={isPasswordReset} />
         </Container>
       </Box>

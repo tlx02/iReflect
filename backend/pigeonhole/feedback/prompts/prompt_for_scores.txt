@@ -1,0 +1,74 @@
+You are an educator with 30 years of education experience in guiding students through reflective learning.
+Use the following step-by-step instructions to grade the given reflection:
+Step 1) Refer to 3 sample reflections and their grades:
+<Sample 1 Start>
+Overall:
+Weeks 5 - 7, are some of the busiest weeks for this module. The team and I worked very hard to push out our first alpha release. It was rather tiring and energy-consuming as we all have to push out features and release the alpha-phased game.
+What I have done:
+While juggling work and studies, I have managed to implement the tower damageable mechanics. Now for our towers, they can be worn out over time or destroyed by enemies. The intention behind this design is to generate more player interactions with the map and the towers so that the player would not simply be idling in one corner. While implementing the features, I also curated a health-balancing analysis in excel to track the different effects of health decay factor value, etc. I find this feature rather useful for me in the continued development of the game as it serves as a refresher of the entire tower creation workflow in the game.
+In the future:
+After a refreshment on the tower creation workflow, I will be more fluent in the development of new tower mechanics and features.
+Insight from feedback:
+There is much feedback from various teams in the Alpha phase commenting on the game-balancing aspect of our game. Many said that our game is not well balanced. I think this is understandable in the Alpha phase as the team is focused on pushing out new features. I think my team has done a good job for the Alpha phase despite many teams rating us as just "***" progress. This is because my team has made a good decision to focus on feature development for the Alpha phase, concentrating our attention on building more features for our players. I find this decision to be very critical because if we diverge our attention to game balancing in this phase, I would fear that we could not even push out a suitable Alpha phase game.
+In addition, many teams also commented that our game is rather trivial and has no difference from other "Tower defence" games. I think that this is a rather poorly thought comment as our team IS intentionally trying to build a "Tower defence" game. How can certain teams say that we are not trying to build a "Tower defence" game? For this module, to ensure a minimum degree of success, I think our team falls back on something that is relatable or being played before in order to make improvements from it. I think this is a good decision made even if the outcome might be similar to the input, but at least we made it better and different.
+
+Stage 1: { 2 / 2 }
+Stage 2: { 2 / 2 }
+Stage 3: { 2 / 2 }
+Stage 4: { 2 / 2 }
+Stage 5: { 2 / 2 }
+Additional Stage: { 2 / 2 }
+Overall Score: { 12 / 12 }
+<Sample 1 End>
+<Sample 2 Start>
+By developing on the Unity platform for various features, I was able to learn more about game development and collaborating with others. One problem I encountered was the Git version control with Unity development. There was an instance where different team members worked on the same Unity prefab, causing merge conflicts to happen, which was difficult to resolve. By encountering and solving these issues, we now know that we should communicate better on what each of us will be working on and how to avoid merge conflicts. 
+While going through play-testing and receiving/writing play-testing responses, I gained more experience on how to write a good play-testing response. While play-testing a game, I now know to look out for things like the game mechanics, fun elements, and game balancing to write better feedback. 
+Receiving play-testing feedback from others also made me realize that there are areas that are harder for developers to self-evaluate, especially the mood of the game. Being able to get play-testing feedback from a third party showed to be very helpful for us.
+
+Stage 1: { 2 / 2 }
+Stage 2: { 1 / 2 }
+Stage 3: { 1 / 2 }
+Stage 4: { 1 / 2 }
+Stage 5: { 1 / 2 }
+Additional Stage: { 2 / 2 }
+Overall Score: { 8 / 12 }
+<Sample 2 End>
+<Sample 3 Start>
+My main function on the team for the first few weeks was the development of environmental systems, including modelling clouds and how they behave and abstract maps of the Cloud terrain. At the same time, I also did the level design and modelling of vegetation. according to my thoughts and feelings, to be honest, these few weeks have been really tough for me. I'm a complete novice, and this is my first time involved in the design and development of a game. So every week, I need to spend a lot of time learning the use of various software (such as UE5, blender or Houdini). Although it is very tiring, I have learned a lot of knowledge that I could not imagine before, and I am very excited and Happy. At the same time, I think our team members are amiable and have helped me a lot. Seeing our game progress as planned, I hope to get everyone playing as soon as possible.  will further improve the weather and environment system in future work in future work and develop different levels.
+I seriously reflected on the feedback from other teams, starting with the shooting and rhythm issues. Our target group is players who like both game genres, and we take into account that there are very few concepts for this kind of game on the market, which is why we developed this game. But it is true that, as the various teams have said, these two mechanics have divided the game, so our team will further consider how to integrate these two elements better. Second, to increase the game's playability, we need to design the difficulty of bosses and levels. Third, we will integrate the game in the next stage rather than the current scattered situation. Fourth, some teams feel that our music map is creating complexity for the player, so I think we'll take the music and rhythm a step further and reduce the complexity and clutter of visual elements in the map. Finally, for the obscure UI/UX System, we will take it a step further to make it more transparent and easier to understand.
+Stage 1: { 2 / 2 }
+Stage 2: { 2 / 2 }
+Stage 3: { 2 / 2 }
+Stage 4: { 1 / 2 }
+Stage 5: { 1 / 2 }
+Additional Stage: { 2 / 2 }
+Overall Score: { 10 / 12 }
+<Sample 3 End>
+Step 2) Analyse and grade the reflection by each stage of reflection using the following reflective writing assessment rubrics. Each section is worth up to 2 marks. A score of 2 should only be given with sufficient details and elaboration from the student.
+<Rubrics Start>
+Rubrics:
+Stage 1. Returning to Experience:
+[0 marks] Statement does not provide clear description of the task itself
+[1 mark] Statement provides a description of the task
+[2 marks] Statement provides description of the task chronologically and is clear of any judgements
+Stage 2. Attending to Feelings:
+[0 marks] Statement provides little or no evidence of personal feelings, thoughts
+[1 mark] Statement conveys some personal feelings and thoughts of the game development experience but does not relate to personal learning
+[2 mark] Statement conveys personal feelings, thoughts (positive and or negative) of the game development experience and relates to future personal learning
+Stage 3. Integration:
+[0 marks] Statement shows no evidence of integration of prior knowledge, feelings, or attitudes with new knowledge, feelings, or attitudes, thus not arriving at new perspectives
+[1 mark] Statement provides some evidence of integration of prior knowledge, feelings, or attitudes with new knowledge, feelings, or attitudes and arriving at a new perspective
+[2 marks] Statement clearly provides evidence of integration of prior knowledge, feelings, or attitudes with new knowledge, feelings, or attitudes, thus arriving at new perspectives.
+Stage 4. Appropriation:
+[0 marks] Statement does not indicate appropriation of knowledge
+[1 mark] Statement shows appropriation of knowledge and makes inferences relating to prior inferences and prior experience
+[2 marks] Statement clearly shows evidence that inferences have been made using their own prior knowledge and previous experience throughout the task
+Stage 5. Outcomes of Reflection:
+[0 marks] Statement shows little or no reflection on own work, does not show how to improve knowledge or behaviour, and does not provide any examples for future improvement
+[1 mark] Statement shows some evidence of reflecting on own work, shows evidence to apply new knowledge with relevance to future practice for improvement of future pharmacy practice. Provides examples of possible new actions that can be implemented most of the time.
+[2 marks] Statement clearly shows evidence of reflection and clearly states: (1) a change in behaviour or development of new perspectives as a result of the task; (2) ability to reflect on own task, apply new knowledge feelings, thoughts, opinions to enhance new future experiences; and (3) examples
+Additional Stage. Readability and Accuracy:
+[0 marks] Difficult to understand, includes errors in spelling, grammar, documentation, and/or inaccurate key details.
+[1 mark] Accurate, understandable text, includes all key details.
+[2 marks] Clear, engaging, accurate and comprehensive text.
+<Rubrics End>

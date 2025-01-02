@@ -211,26 +211,32 @@ def formatResponse(response):
         total_score = int(total_score)
     cleaned_response = cleanUpResponse(response)
 
-    return "Stage 1. Returning to Experience: {} / 2\n".format(cleaned_response.stage_1.score) +\
-            "What was done well: {}\n".format(cleaned_response.stage_1.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.stage_1.improvement) +\
-            "Stage 2. Attending to Feelings: {} / 2\n".format(cleaned_response.stage_2.score) +\
-            "What was done well: {}\n".format(cleaned_response.stage_2.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.stage_2.improvement) +\
-            "Stage 3. Integration: {} / 2\n".format(cleaned_response.stage_3.score) +\
-            "What was done well: {}\n".format(cleaned_response.stage_3.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.stage_3.improvement) +\
-            "Stage 4. Appropriation: {} / 2\n".format(cleaned_response.stage_4.score) +\
-            "What was done well: {}\n".format(cleaned_response.stage_4.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.stage_4.improvement) +\
-            "Stage 5. Outcomes of Reflection: {} / 2\n".format(cleaned_response.stage_5.score) +\
-            "What was done well: {}\n".format(cleaned_response.stage_5.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.stage_5.improvement) +\
-            "Additional Stage. Readability and Accuracy: {} / 2\n".format(cleaned_response.additional_stage.score) +\
-            "What was done well: {}\n".format(cleaned_response.additional_stage.what_was_done_well) +\
-            "Improvement: {}\n\n".format(cleaned_response.additional_stage.improvement) +\
-            "Total Score: {} / 12\n".format(total_score) +\
-            "Summary: {}\n".format(cleaned_response.overall_feedback)
+    return "**Stage 1. Returning to Experience: {} / 2** \n".format(cleaned_response.stage_1.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_1.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_1.improvement) +\
+            " \n" +\
+            "**Stage 2. Attending to Feelings: {} / 2** \n".format(cleaned_response.stage_2.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_2.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_2.improvement) +\
+            " \n" +\
+            "**Stage 3. Integration: {} / 2** \n".format(cleaned_response.stage_3.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_3.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_3.improvement) +\
+            " \n" +\
+            "**Stage 4. Appropriation: {} / 2** \n".format(cleaned_response.stage_4.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_4.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_4.improvement) +\
+            " \n" +\
+            "**Stage 5. Outcomes of Reflection: {} / 2** \n".format(cleaned_response.stage_5.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_5.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_5.improvement) +\
+            " \n" +\
+            "**Additional Stage. Readability and Accuracy: {} / 2** \n".format(cleaned_response.additional_stage.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.additional_stage.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.additional_stage.improvement) +\
+            " \n" +\
+            "**Total Score: {} / 12** \n".format(total_score) +\
+            "**Summary:** {} \n".format(cleaned_response.overall_feedback)
 
 def cleanUpStage(stage):
     if stage.score.is_integer():

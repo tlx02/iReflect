@@ -8,7 +8,7 @@ from courses.models import Course, CourseMembership, Role
 from users.middlewares import check_account_access
 from users.models import AccountType, User
 
-from .logic import askChatGPT, createFeedbackInitialResponseIfNotExists, feedback_initial_response_to_json
+from .logic import askChatGPT, askChatGPTOriginal, createFeedbackInitialResponseIfNotExists, feedback_initial_response_to_json
 from .serializers import PostFeedbackInitialResponseSerializer, PostFeedbackSerializer
 
 
@@ -22,7 +22,11 @@ class FeedbackView(APIView):
 
         # No annotated content from ChatGPT, only feedback
         annotated_content = ''
-        feedback = askChatGPT(serializer.validated_data["content"])
+
+        if requester.id % 2 == 0:
+            feedback = askChatGPTOriginal(serializer.validated_data["content"])
+        else:
+            feedback = askChatGPT(serializer.validated_data["content"])
 
         data = {"annotated_content": annotated_content, "feedback": feedback}
 

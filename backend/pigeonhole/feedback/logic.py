@@ -5,6 +5,8 @@ from courses.models import (Course, CourseMembership, CourseMilestone,
                             CourseMilestoneTemplate, CourseSubmission)
 from django.db import transaction
 from openai import OpenAI
+import pandas as pd
+from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -97,8 +99,8 @@ def analyse(text):
 
 
 # Returns response from ChatGPT in a single string, which might contain newlines.
-
-def askChatGPT(text):
+# Uses a basic prompt
+def askChatGPTOriginal(text):
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
@@ -139,6 +141,162 @@ def askChatGPT(text):
 
     return response 
 
+
+# Returns response from ChatGPT in a single string, which might contain newlines.
+# Uses advanced prompt engineering techniques
+def askChatGPT(text):
+
+    scores = askChatGPTForScore(text)
+    response = askChatGPTForFeedback(text, scores)
+    formatted_response = formatResponse(response)    
+
+    return formatted_response 
+
+class Grade(BaseModel):
+    stage_1_score: int
+    stage_2_score: int
+    stage_3_score: int
+    stage_4_score: int
+    stage_5_score: int
+    additional_stage_score: int
+
+def askChatGPTForScore(text):
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    
+    # Text prompt to generate scores for the given reflection text
+    f = open("pigeonhole/feedback/prompts/prompt_for_scores.txt", "r")
+    prompt = f.read()
+    f.close()
+
+    df = pd.DataFrame(columns=['Stage 1', 'Stage 2', 'Stage 3', 'Stage 4', 'Stage 5', 'Additional Stage'])
+
+    for i in range(3):
+        query = client.beta.chat.completions.parse(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system", 
+                    "content": prompt
+                },
+                {
+                    "role": "user", 
+                    "content": text
+                }],
+            temperature=1,
+            response_format=Grade
+        )
+        response = query.choices[0].message.parsed
+        new_row = {'Stage 1': response.stage_1_score, 
+                    'Stage 2': response.stage_2_score, 
+                    'Stage 3': response.stage_3_score, 
+                    'Stage 4': response.stage_4_score,
+                    'Stage 5': response.stage_5_score,
+                    'Additional Stage': response.additional_stage_score}
+        df = df._append(new_row, ignore_index=True)
+
+        # Log usage
+        logger.info(query.usage)
+
+
+    return df.mean(axis=0).tolist()
+
+class Stage(BaseModel):
+    score: float
+    what_was_done_well: str
+    improvement: str
+
+class Feedback(BaseModel):
+    stage_1: Stage
+    stage_2: Stage
+    stage_3: Stage
+    stage_4: Stage
+    stage_5: Stage
+    additional_stage: Stage
+    overall_feedback: str
+
+def askChatGPTForFeedback(text, scores):
+    scores = [int(val) if val.is_integer() else round(val, 2) for val in scores]
+    scores_string = 'Stage 1: {}, Stage 2: {}, Stage 3: {}, Stage 4: {}, Stage 5: {}, Additional Stage {}'
+    full_text = text + '\n\n' + scores_string.format(*scores)
+
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    
+    # Text prompt to generate feedback for the given reflection text
+    f = open("pigeonhole/feedback/prompts/prompt_for_feedback.txt", "r")
+    prompt = f.read()
+    f.close()
+
+    query = client.beta.chat.completions.parse(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system", 
+                "content": prompt
+            },
+            {
+                "role": "user", 
+                "content": full_text
+            }],
+        temperature=1,
+        response_format=Feedback
+    )
+  
+    response = query.choices[0].message.parsed
+
+    # Log usage
+    logger.info(query.usage)
+
+    return response 
+
+def formatResponse(response):
+    total_score = response.stage_1.score + response.stage_2.score + response.stage_3.score +\
+                    response.stage_4.score + response.stage_5.score + response.additional_stage.score
+    if total_score.is_integer():
+        total_score = int(total_score)
+    cleaned_response = cleanUpResponse(response)
+
+    return "**Stage 1. Returning to Experience: {} / 2** \n".format(cleaned_response.stage_1.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_1.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_1.improvement) +\
+            " \n" +\
+            "**Stage 2. Attending to Feelings: {} / 2** \n".format(cleaned_response.stage_2.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_2.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_2.improvement) +\
+            " \n" +\
+            "**Stage 3. Integration: {} / 2** \n".format(cleaned_response.stage_3.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_3.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_3.improvement) +\
+            " \n" +\
+            "**Stage 4. Appropriation: {} / 2** \n".format(cleaned_response.stage_4.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_4.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_4.improvement) +\
+            " \n" +\
+            "**Stage 5. Outcomes of Reflection: {} / 2** \n".format(cleaned_response.stage_5.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.stage_5.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.stage_5.improvement) +\
+            " \n" +\
+            "**Additional Stage. Readability and Accuracy: {} / 2** \n".format(cleaned_response.additional_stage.score) +\
+            "- **What was done well:** {} \n".format(cleaned_response.additional_stage.what_was_done_well) +\
+            "- **Improvement:** {} \n".format(cleaned_response.additional_stage.improvement) +\
+            " \n" +\
+            "**Total Score: {} / 12** \n".format(total_score) +\
+            "**Summary:** {} \n".format(cleaned_response.overall_feedback)
+
+def cleanUpStage(stage):
+    if stage.score.is_integer():
+        stage.score = int(stage.score) 
+    if stage.score == 2:
+        stage.improvement = "No improvement needed. You've done a great job!"
+    return stage
+
+def cleanUpResponse(response):
+    response.stage_1 = cleanUpStage(response.stage_1)
+    response.stage_2 = cleanUpStage(response.stage_2)
+    response.stage_3 = cleanUpStage(response.stage_3)
+    response.stage_4 = cleanUpStage(response.stage_4)
+    response.stage_5 = cleanUpStage(response.stage_5)
+    response.additional_stage = cleanUpStage(response.additional_stage)
+    return response
 
 @transaction.atomic
 def createFeedbackInitialResponseIfNotExists(

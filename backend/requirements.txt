@@ -15,3 +15,4 @@ selenium
 sendgrid
 openai==1.43.1
 pandas==2.2.3
+httpx==0.27.2

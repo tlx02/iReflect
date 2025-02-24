@@ -4,6 +4,7 @@ import os
 from courses.models import (Course, CourseMembership, CourseMilestone,
                             CourseMilestoneTemplate, CourseSubmission)
 from django.db import transaction
+from django.conf import settings
 from openai import OpenAI
 import pandas as pd
 from pydantic import BaseModel
@@ -164,7 +165,8 @@ def askChatGPTForScore(text):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     # Text prompt to generate scores for the given reflection text
-    f = open("pigeonhole/feedback/prompts/prompt_for_scores.txt", "r")
+    file_path = os.path.join(settings.BASE_DIR, "feedback/prompts/prompt_for_scores.txt")
+    f = open(file_path, "r")
     prompt = f.read()
     f.close()
 
@@ -222,7 +224,8 @@ def askChatGPTForFeedback(text, scores):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
     # Text prompt to generate feedback for the given reflection text
-    f = open("pigeonhole/feedback/prompts/prompt_for_feedback.txt", "r")
+    file_path = os.path.join(settings.BASE_DIR, "feedback/prompts/prompt_for_feedback.txt")
+    f = open(file_path, "r")
     prompt = f.read()
     f.close()
 

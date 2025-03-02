@@ -3,6 +3,7 @@ import { FormField, FormFieldType } from "../types/templates";
 import CheckboxGroupField from "./checkbox-group-field";
 import FormFieldCommentButton from "./form-field-comment-button";
 import FormFieldFeedbackRenderer from "./form-field-feedback-renderer";
+import FormFieldPlaytestFeedbackRenderer from "./form-field-playtest-feedback-renderer";
 import NumericField from "./numeric-field";
 import RadioGroupField from "./radio-group-field";
 import TextField from "./text-field";
@@ -231,13 +232,27 @@ function FormFieldRenderer({
     }
   })();
 
-  const metaComponent = (() => {
+  const feedbackComponent = (() => {
     if (formField.type !== FormFieldType.TextArea || !formField.hasFeedback) {
       return null;
     }
 
     return (
       <FormFieldFeedbackRenderer
+        name={name}
+        question={formField.label}
+        collectData={formField.collectData}
+      />
+    );
+  })();
+
+  const playtestComponent = (() => {
+    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
+      return null;
+    }
+
+    return (
+      <FormFieldPlaytestFeedbackRenderer
         name={name}
         question={formField.label}
         collectData={formField.collectData}
@@ -253,7 +268,8 @@ function FormFieldRenderer({
           <FormFieldCommentButton fieldIndex={index} />
         </Group>
       )}
-      {metaComponent}
+      {feedbackComponent}
+      {playtestComponent}
     </Stack>
   ) : null;
 }

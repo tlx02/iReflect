@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   ## entry point for ireflect app containers

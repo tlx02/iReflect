@@ -67,8 +67,18 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
       return;
     }
 
+    const fullQuery = `
+      You are a Computer Science professor with 30 years of experience in game design and play testing.
+      Grade the response to the following:
+      Question: ${question}
+      Answer: ${content}
+      Structure your response like this:
+      [Score: xx/100]
+      [*Feedback based on the knowledge graph*]
+    `;
+
     try {
-      await getFeedback({ content }).unwrap();
+      await getFeedback({ query: fullQuery, mode: "hybrid" }).unwrap();
     } catch (error) {
       resolveError(error);
       return;

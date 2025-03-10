@@ -90,3 +90,6 @@ export const QUESTION = "question";
 export const INITIAL_RESPONSE = "initial_response";
 export const CREATED = "created";
 export const SUBMISSION_ID = "submission_id";
+export const PLAYTEST_QUERY = "query";
+export const PLAYTEST_MODE = "mode";
+export const PLAYTEST_RESPONSE = "response";

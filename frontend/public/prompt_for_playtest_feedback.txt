@@ -685,7 +685,7 @@ Your final output MUST ALWAYS follow the structure and formatting shown below. D
 - A numeric score for each of the 10 key ingredients
 - A short explanation (1–2 sentences) for each score
 - Each explanation must directly **reference specific phrases or content from the student’s response** to justify the grade
-- Knowledge graph evaluation (30%) with genre inference and alignment explanation
+- Knowledge graph evaluation (50%) with genre inference and alignment explanation
 - A professor-style feedback section for deep guidance
 - A 1–2 sentence final summary WITHOUT a score
 

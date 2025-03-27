@@ -1,4 +1,4 @@
-import { createStyles, Group, ScrollArea, Stack } from "@mantine/core";
+import { createStyles, Group, ScrollArea, Stack, Select } from "@mantine/core";
 import { FormField, FormFieldType } from "../types/templates";
 import CheckboxGroupField from "./checkbox-group-field";
 import FormFieldCommentButton from "./form-field-comment-button";
@@ -20,6 +20,28 @@ const useStyles = createStyles({
   },
 });
 
+const genreOptions = [
+  { value: "RPG", label: "Role Playing Game (RPG)" },
+  { value: "Action", label: "Action" },
+  { value: "Ddventure", label: "Adventure" },
+  { value: "Simulation", label: "Simulation" },
+  { value: "Strategy", label: "Strategy" },
+  { value: "Sports", label: "Sports" },
+  { value: "Educational/Scientific", label: "Educational/Scientific" },
+  { value: "Puzzle", label: "Puzzle" },
+];
+
+const mechanicOptions = [
+  { value: "Mobility & Movement", label: "Mobility & Movement" },
+  { value: "Combat & Attack", label: "Combat & Attack" },
+  { value: "Resource Management & Economy", label: "Resource Management & Economy" },
+  { value: "Puzzle & Interaction", label: "Puzzle & Interaction" },
+  { value: "AI & Character Interaction", label: "AI & Character Interaction" },
+  { value: "Progression & Upgrade", label: "Progression & Upgrade" },
+  { value: "Environmental Interaction", label: "Environmental Interaction" },
+  { value: "Multiplayer & Social", label: "Multiplayer & Social" },
+];
+
 type Props = {
   name: string;
   formField: FormField;
@@ -36,6 +58,22 @@ function FormFieldRenderer({
   withComments,
 }: Props) {
   const { classes } = useStyles();
+
+  const genreDropdownComponent = formField.hasFeedback ? (
+    <Select
+      placeholder="Select the genre of the game you are playtesting"
+      label="Genre"
+      data={genreOptions}
+    />
+  ) : null;
+
+  const mechanicDropdownComponent = formField.hasFeedback ? (
+    <Select
+      placeholder="Select the MAIN mechanic of the game you are playtesting"
+      label="Mechanic"
+      data={mechanicOptions}
+    />
+  ) : null;
 
   const mainComponent = (() => {
     switch (formField.type) {
@@ -262,6 +300,8 @@ function FormFieldRenderer({
 
   return mainComponent ? (
     <Stack spacing={8}>
+      {genreDropdownComponent}
+      {mechanicDropdownComponent}
       {mainComponent}
       {withComments && (
         <Group position="right">

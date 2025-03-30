@@ -66,7 +66,8 @@ function FormFieldRenderer({
 
     return (
     <Select
-      placeholder="Select the genre of the game you are playtesting"
+      name="Genre"
+      placeholder="Select genre"
       label="Select the Genre of the game you are playtesting"
       data={genreOptions}
       defaultValue={genreOptions[0].value}
@@ -81,7 +82,8 @@ function FormFieldRenderer({
 
     return (
     <Select
-      placeholder="Select the MAIN mechanic of the game you are playtesting"
+      name="Mechanic"
+      placeholder="Select MAIN mechanic"
       label="Select the MAIN Mechanic of the game you are playtesting"
       data={mechanicOptions}
       defaultValue={mechanicOptions[0].value}

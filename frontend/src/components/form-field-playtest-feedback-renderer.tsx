@@ -40,7 +40,8 @@ const markdownComponents: Partial<Components> = {
 };
 
 function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Props) {
-  const { getValues } = useFormContext<{ [name: string]: string }>();
+  // const { getValues } = useFormContext<{ [name: string]: string }>();
+  const{ getValues} = useFormContext();
   const { resolveError } = useResolveError({ name: "form-field-playtest-feedback-renderer" });
   const feedbackContext = useContext(FeedbackContext);
 
@@ -71,9 +72,9 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
 
   const onGenerateFeedback = async () => {
     setInputError(null);
-    const content = getValues(name);
-    const genre = getValues("Genre");
-    const mechanic = getValues("Mechanic");
+    const content = getValues(name) as string;
+    const genre = getValues("Genre") as string;
+    const mechanic = getValues("Mechanic") as string;
     console.log("genre:", genre, "mechanic:", mechanic);
     if (!genre || !mechanic) {
       setInputError("Please select both a genre and a mechanic before generating feedback.");

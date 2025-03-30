@@ -59,21 +59,33 @@ function FormFieldRenderer({
 }: Props) {
   const { classes } = useStyles();
 
-  const genreDropdownComponent = formField.hasFeedback ? (
+  const genreDropdownComponent = (() => {
+    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
+      return null;
+    }
+
+    return (
     <Select
       placeholder="Select the genre of the game you are playtesting"
       label="Genre"
       data={genreOptions}
     />
-  ) : null;
+    );
+  })();
+  
+  const mechanicDropdownComponent = (() => {
+    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
+      return null;
+    }
 
-  const mechanicDropdownComponent = formField.hasFeedback ? (
+    return (
     <Select
       placeholder="Select the MAIN mechanic of the game you are playtesting"
       label="Mechanic"
       data={mechanicOptions}
     />
-  ) : null;
+    );
+  })();
 
   const mainComponent = (() => {
     switch (formField.type) {

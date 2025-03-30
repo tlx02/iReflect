@@ -2,9 +2,14 @@ import { Button, Text, Stack, Paper, Blockquote, Title } from "@mantine/core";
 import { useFormContext } from "react-hook-form";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { TbMessageChatbot } from "react-icons/tb";
+import { useContext } from "react";
 import Markdown, { Components } from "react-markdown";
 import { useState, useEffect } from "react";
 import { useResolveError } from "../utils/error-utils";
+import {
+  useCreateInitialResponseIfNotExistsMutation,
+} from "../redux/services/feedback-api";
+import { FeedbackContext } from "../contexts/feedback-data-collection-provider";
 
 type Props = {
   name: string;
@@ -37,8 +42,9 @@ const markdownComponents: Partial<Components> = {
 function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Props) {
   const { getValues } = useFormContext<{ [name: string]: string }>();
   const { resolveError } = useResolveError({ name: "form-field-playtest-feedback-renderer" });
+  const feedbackContext = useContext(FeedbackContext);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setisFetching] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [promptText, setPromptText] = useState<string>("");
 
@@ -55,11 +61,17 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     fetchPrompt();
   }, []);
 
+
+  const [tryStoreInitialResponse, { isLoading }] =
+    useCreateInitialResponseIfNotExistsMutation({
+      selectFromResult: ({ isLoading }) => ({ isLoading }),
+    });
+
   const onGenerateFeedback = async () => {
     const content = getValues(name);
     const genre = getValues("Genre");
     const mechanic = getValues("Mechanic");
-    if (!content || isLoading) return;
+    if (!content || isFetching || isLoading) return;
 
     const fullQuery = `
       ${promptText}
@@ -70,7 +82,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     `;
 
     try {
-      setIsLoading(true);
+      setisFetching(true);
       const res = await fetch("/api/playtest/", {
         method: "POST",
         headers: {
@@ -85,7 +97,27 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     } catch (err) {
       resolveError(err);
     } finally {
-      setIsLoading(false);
+      setisFetching(false);
+    }
+
+    //If form in test mode, responses not considered
+    if (feedbackContext.testMode || !feedbackContext.submissionId) {
+      return;
+    }
+
+    const feedbackPostData = {
+      submission_id: feedbackContext.submissionId,
+      question,
+      initial_response: content,
+    };
+
+    try {
+
+      await tryStoreInitialResponse(feedbackPostData).unwrap();
+
+    } catch (error) {
+
+      resolveError(error);
     }
   };
 
@@ -95,14 +127,14 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
         <Button
           leftIcon={<IoGameControllerOutline />}
           compact
-          loading={isLoading}
+          loading={isFetching}
           onClick={onGenerateFeedback}
         >
-          {isLoading ? "Generating" : "Generate"} feedback
+          {isFetching ? "Generating" : "Generate"} feedback
         </Button>
       </div>
 
-      {feedback &&(
+      {feedback && (
         <Blockquote color="blue" mt="xl" icon={<TbMessageChatbot size={30} />}>
           <Paper withBorder shadow="xl" p="xl">
             <Text size="sm">

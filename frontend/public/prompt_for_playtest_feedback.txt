@@ -771,3 +771,15 @@ This is the ONLY acceptable output format. You MUST:
 
 Any missing section, unreferenced grading rationale, or vague justification will result in an invalid evaluation.
 
+==========================
+FORMAT AND STYLING INSTRUCTIONS (MANDATORY)
+==========================
+
+- Your response must be strictly formatted using **Markdown** syntax.
+- Use bold (**text**) for all section headers (e.g., "Score", "Specificity", etc.).
+- Use bullet points, numbered lists, and code blocks if needed to preserve structure.
+- Ensure line breaks and paragraph spacing are respected.
+- Do NOT return plain text — the formatting must be preserved for display.
+
+All text must be suitable for direct rendering in a Markdown-compatible frontend.
+

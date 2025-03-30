@@ -70,7 +70,7 @@ function FormFieldRenderer({
       placeholder="Select genre"
       label="Select the Genre of the game you are playtesting"
       data={genreOptions}
-      defaultValue={genreOptions[0].value}
+      required
     />
     );
   })();
@@ -86,7 +86,7 @@ function FormFieldRenderer({
       placeholder="Select MAIN mechanic"
       label="Select the MAIN Mechanic of the game you are playtesting"
       data={mechanicOptions}
-      defaultValue={mechanicOptions[0].value}
+      required
     />
     );
   })();
@@ -301,6 +301,7 @@ function FormFieldRenderer({
   })();
 
   const playtestComponent = (() => {
+
     if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
       return null;
     }
@@ -316,8 +317,8 @@ function FormFieldRenderer({
 
   return mainComponent ? (
     <Stack spacing={8}>
-      {genreDropdownComponent}
-      {mechanicDropdownComponent}
+      {/* {genreDropdownComponent}
+      {mechanicDropdownComponent} */}
       {mainComponent}
       {withComments && (
         <Group position="right">

@@ -47,6 +47,8 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
   const [isFetching, setisFetching] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [promptText, setPromptText] = useState<string>("");
+  const [inputError, setInputError] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchPrompt = async () => {
@@ -68,10 +70,17 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     });
 
   const onGenerateFeedback = async () => {
+    setInputError(null);
     const content = getValues(name);
     const genre = getValues("Genre");
     const mechanic = getValues("Mechanic");
+    console.log("genre:", genre, "mechanic:", mechanic);
+    if (!genre || !mechanic) {
+      setInputError("Please select both a genre and a mechanic before generating feedback.");
+      return;
+    }
     if (!content || isFetching || isLoading) return;
+
 
     const fullQuery = `
       ${promptText}
@@ -133,7 +142,11 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
           {isFetching ? "Generating" : "Generate"} feedback
         </Button>
       </div>
-
+      {inputError && (
+        <Text color="red" mt="sm" size="sm">
+          {inputError}
+        </Text>
+      )}
       {feedback && (
         <Blockquote color="blue" mt="xl" icon={<TbMessageChatbot size={30} />}>
           <Paper withBorder shadow="xl" p="xl">

@@ -69,7 +69,7 @@ function FormFieldRenderer({
       placeholder="Select the genre of the game you are playtesting"
       label="Genre"
       data={genreOptions}
-      required
+      defaultValue={genreOptions[0].value}
     />
     );
   })();
@@ -84,7 +84,7 @@ function FormFieldRenderer({
       placeholder="Select the MAIN mechanic of the game you are playtesting"
       label="Mechanic"
       data={mechanicOptions}
-      required
+      defaultValue={mechanicOptions[0].value}
     />
     );
   })();

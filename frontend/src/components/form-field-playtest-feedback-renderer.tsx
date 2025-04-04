@@ -40,16 +40,13 @@ const markdownComponents: Partial<Components> = {
 };
 
 function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Props) {
-  // const { getValues } = useFormContext<{ [name: string]: string }>();
-  const{ getValues} = useFormContext();
+  const { getValues } = useFormContext<{ [name: string]: string }>();
   const { resolveError } = useResolveError({ name: "form-field-playtest-feedback-renderer" });
   const feedbackContext = useContext(FeedbackContext);
 
   const [isFetching, setisFetching] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [promptText, setPromptText] = useState<string>("");
-  const [inputError, setInputError] = useState<string | null>(null);
-
 
   useEffect(() => {
     const fetchPrompt = async () => {
@@ -71,17 +68,10 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     });
 
   const onGenerateFeedback = async () => {
-    setInputError(null);
-    const content = getValues(name) as string;
-    const genre = getValues("Genre") as string;
-    const mechanic = getValues("Mechanic") as string;
-    console.log("genre:", genre, "mechanic:", mechanic);
-    if (!genre || !mechanic) {
-      setInputError("Please select both a genre and a mechanic before generating feedback.");
-      return;
-    }
+    const content = getValues(name);
+    const genre = getValues("Genre");
+    const mechanic = getValues("Mechanic");
     if (!content || isFetching || isLoading) return;
-
 
     const fullQuery = `
       ${promptText}
@@ -143,11 +133,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
           {isFetching ? "Generating" : "Generate"} feedback
         </Button>
       </div>
-      {inputError && (
-        <Text color="red" mt="sm" size="sm">
-          {inputError}
-        </Text>
-      )}
+
       {feedback && (
         <Blockquote color="blue" mt="xl" icon={<TbMessageChatbot size={30} />}>
           <Paper withBorder shadow="xl" p="xl">

@@ -57,14 +57,10 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
 
   const onGenerateFeedback = async () => {
     const content = getValues(name);
-    const genre = getValues("Genre");
-    const mechanic = getValues("Mechanic");
     if (!content || isLoading) return;
 
     const fullQuery = `
       ${promptText}
-      Genre: ${genre}
-      Main Mechanic: ${mechanic}
       Question: ${question}
       Answer: ${content}
     `;

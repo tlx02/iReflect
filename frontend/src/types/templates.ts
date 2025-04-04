@@ -7,7 +7,6 @@ import {
   DESCRIPTION,
   FORM_FIELD_DATA,
   HAS_FEEDBACK,
-  HAS_PLAYTEST_FEEDBACK,
   IS_PUBLISHED,
   LABEL,
   NAME,
@@ -43,7 +42,6 @@ export const superFormFieldSchema = z.object({
   [PLACEHOLDER]: z.string().trim(),
   [REQUIRED]: z.boolean(),
   [HAS_FEEDBACK]: z.boolean(),
-  [HAS_PLAYTEST_FEEDBACK]: z.boolean(),
   [CHOICES]: z.preprocess(
     (input) =>
       isStringOrArray(input)
@@ -79,7 +77,6 @@ export const textAreaFormFieldSchema = superFormFieldSchema
     placeholder: true,
     required: true,
     hasFeedback: true,
-    hasPlaytestFeedback: true,
   })
   .extend({
     [TYPE]: z.literal(FormFieldType.TextArea),

@@ -1,9 +1,8 @@
-import { createStyles, Group, ScrollArea, Stack, Select } from "@mantine/core";
+import { createStyles, Group, ScrollArea, Stack } from "@mantine/core";
 import { FormField, FormFieldType } from "../types/templates";
 import CheckboxGroupField from "./checkbox-group-field";
 import FormFieldCommentButton from "./form-field-comment-button";
 import FormFieldFeedbackRenderer from "./form-field-feedback-renderer";
-import FormFieldPlaytestFeedbackRenderer from "./form-field-playtest-feedback-renderer";
 import NumericField from "./numeric-field";
 import RadioGroupField from "./radio-group-field";
 import TextField from "./text-field";
@@ -19,28 +18,6 @@ const useStyles = createStyles({
     },
   },
 });
-
-const genreOptions = [
-  { value: "RPG", label: "Role Playing Game (RPG)" },
-  { value: "Action", label: "Action" },
-  { value: "Ddventure", label: "Adventure" },
-  { value: "Simulation", label: "Simulation" },
-  { value: "Strategy", label: "Strategy" },
-  { value: "Sports", label: "Sports" },
-  { value: "Educational/Scientific", label: "Educational/Scientific" },
-  { value: "Puzzle", label: "Puzzle" },
-];
-
-const mechanicOptions = [
-  { value: "Mobility & Movement", label: "Mobility & Movement" },
-  { value: "Combat & Attack", label: "Combat & Attack" },
-  { value: "Resource Management & Economy", label: "Resource Management & Economy" },
-  { value: "Puzzle & Interaction", label: "Puzzle & Interaction" },
-  { value: "AI & Character Interaction", label: "AI & Character Interaction" },
-  { value: "Progression & Upgrade", label: "Progression & Upgrade" },
-  { value: "Environmental Interaction", label: "Environmental Interaction" },
-  { value: "Multiplayer & Social", label: "Multiplayer & Social" },
-];
 
 type Props = {
   name: string;
@@ -58,34 +35,6 @@ function FormFieldRenderer({
   withComments,
 }: Props) {
   const { classes } = useStyles();
-
-  const genreDropdownComponent = (() => {
-    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
-      return null;
-    }
-
-    return (
-    <Select
-      placeholder="Select the genre of the game you are playtesting"
-      label="Genre"
-      data={genreOptions}
-    />
-    );
-  })();
-  
-  const mechanicDropdownComponent = (() => {
-    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
-      return null;
-    }
-
-    return (
-    <Select
-      placeholder="Select the MAIN mechanic of the game you are playtesting"
-      label="Mechanic"
-      data={mechanicOptions}
-    />
-    );
-  })();
 
   const mainComponent = (() => {
     switch (formField.type) {
@@ -282,7 +231,7 @@ function FormFieldRenderer({
     }
   })();
 
-  const feedbackComponent = (() => {
+  const metaComponent = (() => {
     if (formField.type !== FormFieldType.TextArea || !formField.hasFeedback) {
       return null;
     }
@@ -296,32 +245,15 @@ function FormFieldRenderer({
     );
   })();
 
-  const playtestComponent = (() => {
-    if (formField.type !== FormFieldType.TextArea || !formField.hasPlaytestFeedback) {
-      return null;
-    }
-
-    return (
-      <FormFieldPlaytestFeedbackRenderer
-        name={name}
-        question={formField.label}
-        collectData={formField.collectData}
-      />
-    );
-  })();
-
   return mainComponent ? (
     <Stack spacing={8}>
-      {genreDropdownComponent}
-      {mechanicDropdownComponent}
       {mainComponent}
       {withComments && (
         <Group position="right">
           <FormFieldCommentButton fieldIndex={index} />
         </Group>
       )}
-      {feedbackComponent}
-      {playtestComponent}
+      {metaComponent}
     </Stack>
   ) : null;
 }

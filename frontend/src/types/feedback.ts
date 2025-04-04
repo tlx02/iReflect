@@ -6,9 +6,6 @@ import {
   INITIAL_RESPONSE,
   QUESTION,
   SUBMISSION_ID,
-  PLAYTEST_MODE,
-  PLAYTEST_RESPONSE,
-  PLAYTEST_QUERY,
 } from "../constants";
 import { BaseData } from "./base";
 
@@ -30,13 +27,4 @@ export type FeedbackInitialResponsePostData = Partial<BaseData> & {
   [SUBMISSION_ID]: string | number;
   [QUESTION]: string;
   [INITIAL_RESPONSE]: string;
-};
-
-export type PlaytestPostData = {
-  [PLAYTEST_QUERY]: string;
-  [PLAYTEST_MODE]: string;
-};
-
-export type PlaytestResponseData = {
-  [PLAYTEST_RESPONSE]: string;
 };

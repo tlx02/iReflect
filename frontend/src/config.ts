@@ -2,10 +2,10 @@ import { displayDateTime } from "./utils/transform-utils";
 
 export const isProduction = process.env.NODE_ENV === "production";
 
-if (isProduction) {
+/*if (isProduction) {
   // turn off console.log in production
   console.log = () => {};
-} else {
+} else {*/
   const logger = console.log;
   console.log = (...data) => {
     const dateString = `[${displayDateTime(
@@ -22,4 +22,4 @@ if (isProduction) {
 
     logger(...(logData as unknown[]));
   };
-}
+//}

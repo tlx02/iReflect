@@ -5,6 +5,7 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { useContext } from "react";
 import Markdown, { Components } from "react-markdown";
 import {
+  useCreateInitialResponseIfNotExistsMutation,
   useLazyGetFeedbackQuery,
 } from "../redux/services/playtest-api";
 import { useResolveError } from "../utils/error-utils";
@@ -42,7 +43,19 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
   const { getValues } = useFormContext<{ [name: string]: string }>();
   const feedbackContext = useContext(FeedbackContext);
 
-  const [getFeedback, { isFetching, data: feedbackResult }] = useLazyGetFeedbackQuery();
+  const [getFeedback, { isFetching, feedbackResult }] = useLazyGetFeedbackQuery(
+    {
+      selectFromResult: ({ isFetching, data: feedbackResult }) => ({
+        isFetching,
+        feedbackResult,
+      }),
+    },
+  );
+
+  const [tryStoreInitialResponse, { isLoading }] =
+    useCreateInitialResponseIfNotExistsMutation({
+      selectFromResult: ({ isLoading }) => ({ isLoading }),
+    });
 
   const { resolveError } = useResolveError({
     name: "form-field-feedback-renderer",
@@ -50,7 +63,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
 
   const onGenerateFeedback = async () => {
     const content = getValues(name);
-    if (isFetching || !content) {
+    if (isFetching || !content || isLoading) {
       return;
     }
 
@@ -71,10 +84,22 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
       return;
     }
 
-    // // If form in test mode, responses not considered
-    // if (feedbackContext.testMode || !feedbackContext.submissionId) {
-    //   return;
-    // }
+    // If form in test mode, responses not considered
+    if (feedbackContext.testMode || !feedbackContext.submissionId) {
+      return;
+    }
+
+    const feedbackPostData = {
+      submission_id: feedbackContext.submissionId,
+      question: question,
+      initial_response: content,
+    };
+
+    try {
+      await tryStoreInitialResponse(feedbackPostData).unwrap();
+    } catch (error) {
+      resolveError(error);
+    }
   };
 
   return (

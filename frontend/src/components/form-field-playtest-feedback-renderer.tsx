@@ -91,7 +91,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
 
     const feedbackPostData = {
       submission_id: feedbackContext.submissionId,
-      question: question,
+      question,
       initial_response: content,
     };
 
@@ -124,7 +124,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
               <br />
             </Text>
             <Markdown components={markdownComponents}>
-              {feedbackResult.response}
+              {feedbackResult.feedback}
             </Markdown>
           </Paper>
         </Blockquote>

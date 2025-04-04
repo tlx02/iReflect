@@ -68,9 +68,15 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     });
 
   const onGenerateFeedback = async () => {
+    setInputError(null);
     const content = getValues(name);
     const genre = getValues("Genre");
     const mechanic = getValues("Mechanic");
+    console.log("genre:", genre, "mechanic:", mechanic);
+    if (!genre || !mechanic) {
+      setInputError("Please select both a genre and a mechanic before generating feedback.");
+      return;
+    }
     if (!content || isFetching || isLoading) return;
 
     const fullQuery = `

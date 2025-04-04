@@ -66,9 +66,11 @@ function FormFieldRenderer({
 
     return (
     <Select
-      placeholder="Select the genre of the game you are playtesting"
-      label="Genre"
+      name="Genre"
+      placeholder="Select genre"
+      label="Select the Genre of the game you are playtesting"
       data={genreOptions}
+      required
     />
     );
   })();
@@ -80,9 +82,11 @@ function FormFieldRenderer({
 
     return (
     <Select
-      placeholder="Select the MAIN mechanic of the game you are playtesting"
-      label="Mechanic"
+      name="Mechanic"
+      placeholder="Select MAIN mechanic"
+      label="Select the MAIN Mechanic of the game you are playtesting"
       data={mechanicOptions}
+      required
     />
     );
   })();
@@ -312,8 +316,8 @@ function FormFieldRenderer({
 
   return mainComponent ? (
     <Stack spacing={8}>
-      {genreDropdownComponent}
-      {mechanicDropdownComponent}
+      {/* {genreDropdownComponent}
+      {mechanicDropdownComponent} */}
       {mainComponent}
       {withComments && (
         <Group position="right">

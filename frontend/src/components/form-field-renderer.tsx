@@ -36,6 +36,22 @@ function FormFieldRenderer({
 }: Props) {
   const { classes } = useStyles();
 
+  const genreDropdownComponent = formField.hasFeedback ? (
+    <Select
+      placeholder="Select the genre of the game you are playtesting"
+      label="Genre"
+      data={genreOptions}
+    />
+  ) : null;
+
+  const mechanicDropdownComponent = formField.hasFeedback ? (
+    <Select
+      placeholder="Select the MAIN mechanic of the game you are playtesting"
+      label="Mechanic"
+      data={mechanicOptions}
+    />
+  ) : null;
+
   const mainComponent = (() => {
     switch (formField.type) {
       case FormFieldType.Text: {

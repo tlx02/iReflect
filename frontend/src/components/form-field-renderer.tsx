@@ -67,9 +67,9 @@ function FormFieldRenderer({
     return (
     <Select
       placeholder="Select the genre of the game you are playtesting"
-      label="Select the Genre of the game you are playtesting"
+      label="Genre"
       data={genreOptions}
-      defaultValue={genreOptions[0].value}
+      required
     />
     );
   })();
@@ -82,9 +82,9 @@ function FormFieldRenderer({
     return (
     <Select
       placeholder="Select the MAIN mechanic of the game you are playtesting"
-      label="Select the MAIN Mechanic of the game you are playtesting"
+      label="Mechanic"
       data={mechanicOptions}
-      defaultValue={mechanicOptions[0].value}
+      required
     />
     );
   })();

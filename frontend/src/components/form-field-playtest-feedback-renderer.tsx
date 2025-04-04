@@ -2,10 +2,13 @@ import { Button, Text, Stack, Paper, Blockquote, Title } from "@mantine/core";
 import { useFormContext } from "react-hook-form";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { TbMessageChatbot } from "react-icons/tb";
+import { useContext } from "react";
 import Markdown, { Components } from "react-markdown";
-import { useState } from "react";
+import {
+  useLazyGetFeedbackQuery,
+} from "../redux/services/playtest-api";
 import { useResolveError } from "../utils/error-utils";
-
+import { FeedbackContext } from "../contexts/feedback-data-collection-provider";
 
 type Props = {
   name: string;
@@ -37,14 +40,19 @@ const markdownComponents: Partial<Components> = {
 
 function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Props) {
   const { getValues } = useFormContext<{ [name: string]: string }>();
-  const { resolveError } = useResolveError({ name: "form-field-playtest-feedback-renderer" });
+  const feedbackContext = useContext(FeedbackContext);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [getFeedback, { isFetching, data: feedbackResult }] = useLazyGetFeedbackQuery();
+
+  const { resolveError } = useResolveError({
+    name: "form-field-feedback-renderer",
+  });
 
   const onGenerateFeedback = async () => {
     const content = getValues(name);
-    if (!content || isLoading) return;
+    if (isFetching || !content) {
+      return;
+    }
 
     const fullQuery = `
       You are a Computer Science professor with 30 years of experience in game design and play testing.
@@ -57,23 +65,16 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
     `;
 
     try {
-      setIsLoading(true);
-      const res = await fetch("/api/playtest/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": "your-secure-api-key-here",
-        },
-        body: JSON.stringify({ query: fullQuery, mode: "hybrid" }),
-      });
-
-      const raw = await res.json() as { response?: string };
-      setFeedback(raw.response ?? "No feedback returned.");
-    } catch (err) {
-      resolveError(err);
-    } finally {
-      setIsLoading(false);
+      await getFeedback({ query: fullQuery, mode: "hybrid" }).unwrap();
+    } catch (error) {
+      resolveError(error);
+      return;
     }
+
+    // // If form in test mode, responses not considered
+    // if (feedbackContext.testMode || !feedbackContext.submissionId) {
+    //   return;
+    // }
   };
 
   return (
@@ -82,14 +83,14 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
         <Button
           leftIcon={<IoGameControllerOutline />}
           compact
-          loading={isLoading}
+          loading={isFetching}
           onClick={onGenerateFeedback}
         >
-          {isLoading ? "Generating" : "Generate"} feedback
+          {isFetching ? "Generating" : "Generate"} feedback
         </Button>
       </div>
 
-      {feedback &&(
+      {feedbackResult && (
         <Blockquote color="blue" mt="xl" icon={<TbMessageChatbot size={30} />}>
           <Paper withBorder shadow="xl" p="xl">
             <Text size="sm">
@@ -98,7 +99,7 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
               <br />
             </Text>
             <Markdown components={markdownComponents}>
-              {feedback}
+              {feedbackResult.response}
             </Markdown>
           </Paper>
         </Blockquote>
@@ -107,7 +108,4 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
   );
 }
 
-
 export default FormFieldPlaytestFeedbackRenderer;
-
-

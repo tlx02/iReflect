@@ -3,8 +3,9 @@ import { useFormContext } from "react-hook-form";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { TbMessageChatbot } from "react-icons/tb";
 import Markdown, { Components } from "react-markdown";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useResolveError } from "../utils/error-utils";
+
 
 type Props = {
   name: string;
@@ -40,29 +41,19 @@ function FormFieldPlaytestFeedbackRenderer({ name, question, collectData }: Prop
 
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [promptText, setPromptText] = useState<string>("");
-
-  useEffect(() => {
-    const fetchPrompt = async () => {
-      try {
-        const res = await fetch("/prompt_for_playtest_feedback.txt");
-        const text = await res.text();
-        setPromptText(text);
-      } catch (error) {
-        console.error("Failed to load prompt file:", error);
-      }
-    };
-    fetchPrompt();
-  }, []);
 
   const onGenerateFeedback = async () => {
     const content = getValues(name);
     if (!content || isLoading) return;
 
     const fullQuery = `
-      ${promptText}
+      You are a Computer Science professor with 30 years of experience in game design and play testing.
+      Grade the response to the following:
       Question: ${question}
       Answer: ${content}
+      Structure your response like this:
+      [Score: xx/100]
+      [*Feedback based on the knowledge graph*]
     `;
 
     try {

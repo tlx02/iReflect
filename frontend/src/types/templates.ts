@@ -77,7 +77,6 @@ export const textAreaFormFieldSchema = superFormFieldSchema
     placeholder: true,
     required: true,
     hasFeedback: true,
-    hasPlayTestFeedback: true,
   })
   .extend({
     [TYPE]: z.literal(FormFieldType.TextArea),
